@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>INFO 3300 - Data-driven Web Pages</title>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+
+<style>
+body { font-family: Arial, sans-serif; font-size: 12;}
+</style>
+
+<body>
+<script>
+
+var data;
+var year;
+
+function mutateRow(row) {
+  var newRow = {};
+  newRow["Race"] = row["Race"].split(' (')[0]
+  newRow["Year"] = Number(row["Year"])
+  newRow["Brown"] = Number(row["Brown University"])
+  newRow["Columbia"] = Number(row["Columbia University in the City of New York"])
+  newRow["Cornell"] = Number(row["Cornell University"])
+  newRow["Dartmouth"] = Number(row["Dartmouth College"])
+  newRow["Harvard"] = Number(row["Harvard University"])
+  newRow["Princeton"] = Number(row["Princeton University"])
+  newRow["UPenn"] = Number(row["University of Pennsylvania"])
+  newRow["Yale"] = Number(row["Yale University"])
+  // console.log(newRow)
+  return newRow;
+}
+
+function callback(error, rawData) {
+  data = rawData;
+
+  year = d3.nest()
+  .key(function (d) { return d.Year; })
+  .entries(data);
+}
+
+d3.csv("RaceByYearForUndergradEngineering2.csv", mutateRow, callback);
+
+</script>
+</body>
+</html>
