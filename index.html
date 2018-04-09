@@ -13,6 +13,8 @@ body { font-family: Arial, sans-serif; font-size: 12;}
 
 var data;
 var year;
+var race;
+var Cornell;
 
 function mutateRow(row) {
   var newRow = {};
@@ -35,6 +37,16 @@ function callback(error, rawData) {
 
   year = d3.nest()
   .key(function (d) { return d.Year; })
+  .entries(data);
+
+
+  race = d3.nest()
+  .key(function (d) { return d.Race; })
+  .entries(data);
+
+
+  Cornell = d3.nest()
+  .key(function (d) { return d.Cornell; })
   .entries(data);
 }
 
