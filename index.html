@@ -17,6 +17,7 @@
       function mutateRow(row) {
         var newRow = {};
         newRow["Race"] = row["Race"].split(' (')[0]
+        newRow["Gender"] = row["Race"].indexOf("women") != -1 ? "woman" : "man"
         newRow["Year"] = Number(row["Year"])
         newRow["Brown"] = Number(row["Brown University"])
         newRow["Columbia"] = Number(row["Columbia University in the City of New York"])
@@ -35,6 +36,14 @@
 
         year = d3.nest()
         .key(function (d) { return d.Year; })
+        .entries(data);
+
+        race = d3.nest()
+        .key(function (d) { return d.Race; })
+        .entries(data);
+
+        gender = d3.nest()
+        .key(function (d) { return d.Gender; })
         .entries(data);
       }
 
