@@ -30,8 +30,8 @@
 
       function mutateRow(row) {
         var newRow = {};
-        newRow["Race"] = row["Race"].split(' (')[0]
-        newRow["Gender"] = row["Race"].indexOf("women") != -1 ? "woman" : "man"
+        newRow["Gender"] = row["Gender"]
+        newRow["Race"] = row["Race"]
         newRow["Year"] = Number(row["Year"])
         newRow["Brown"] = Number(row["Brown University"])
         newRow["Columbia"] = Number(row["Columbia University in the City of New York"])
@@ -152,7 +152,7 @@
         }
       }
 
-      d3.csv("RaceByYearForUndergradEngineering2.csv", mutateRow, callback);
+      d3.csv("RaceByYear.csv", mutateRow, callback);
 
     </script>
   </body>
