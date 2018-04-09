@@ -13,7 +13,7 @@
       Number of datapoints:
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
     </div>-->
-    <input id ="slider" type="range" min="1996" max="2016" value = "2005">
+    <!-- <input id ="slider" type="range" min="1996" max="2016" value = "2005"> -->
     <script>
       var data;
       var year;
@@ -55,6 +55,7 @@
         .entries(data);
 
         createVisualization();
+        createVisualization();
       }
 
       function prettyPrintRaceName(d) {
@@ -86,8 +87,16 @@
         });
 
 
-        var width = 960,
-            height = 500 - 29; // adjust for height of input bar div
+        // var width = 960,
+        //     height = 500 - 29; // adjust for height of input bar div
+        var small = Math.min(window.innerHeight-10,window.innerWidth/2-10);
+        console.log(small)
+        console.log(window.innerHeight)
+        console.log(window.innerWidth)
+
+        var width = small;
+        var height = small;
+
         var color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // draw and append the container
@@ -111,9 +120,7 @@
         var g = svg.append('g')
         var g = svg.append('g')
           .attr('transform', function(){
-            if ( window.innerWidth >= 960 ) var shiftWidth = width / 2;
-            if ( window.innerWidth < 960 ) var shiftWidth = width / 3;
-            return 'translate(' + shiftWidth + ',' + height / 2 + ')';
+            return 'translate(' + width/2 + ',' + height / 2 + ')';
           })
 
         // grab data
