@@ -1,57 +1,63 @@
 <html>
+
 <head>
-<title>INFO 3300 - Data-driven Web Pages</title>
-<script src="https://d3js.org/d3.v4.min.js"></script>
+  <title>INFO 3300 - Data-driven Web Pages</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 
 <style>
-body { font-family: Arial, sans-serif; font-size: 12;}
+  body { font-family: Arial, sans-serif; font-size: 12;}
 </style>
 
 <body>
-<script>
+  <script>
 
-var data;
-var year;
-var race;
-var Cornell;
+    var data;
+    var year;
+    var race;
+    var gender;
+    var Cornell;
 
-function mutateRow(row) {
-  var newRow = {};
-  newRow["Race"] = row["Race"].split(' (')[0]
-  newRow["Year"] = Number(row["Year"])
-  newRow["Brown"] = Number(row["Brown University"])
-  newRow["Columbia"] = Number(row["Columbia University in the City of New York"])
-  newRow["Cornell"] = Number(row["Cornell University"])
-  newRow["Dartmouth"] = Number(row["Dartmouth College"])
-  newRow["Harvard"] = Number(row["Harvard University"])
-  newRow["Princeton"] = Number(row["Princeton University"])
-  newRow["UPenn"] = Number(row["University of Pennsylvania"])
-  newRow["Yale"] = Number(row["Yale University"])
-  // console.log(newRow)
-  return newRow;
-}
+    function mutateRow(row) {
+      var newRow = {};
+      newRow["Race"] = row["Race"].split(' (')[0]
+      newRow["Gender"] = row["Race"].indexOf("women") != -1 ? "woman" : "man"
+      newRow["Year"] = Number(row["Year"])
+      newRow["Brown"] = Number(row["Brown University"])
+      newRow["Columbia"] = Number(row["Columbia University in the City of New York"])
+      newRow["Cornell"] = Number(row["Cornell University"])
+      newRow["Dartmouth"] = Number(row["Dartmouth College"])
+      newRow["Harvard"] = Number(row["Harvard University"])
+      newRow["Princeton"] = Number(row["Princeton University"])
+      newRow["UPenn"] = Number(row["University of Pennsylvania"])
+      newRow["Yale"] = Number(row["Yale University"])
+      // console.log(newRow)
+      return newRow;
+    }
 
-function callback(error, rawData) {
-  data = rawData;
+    function callback(error, rawData) {
+      data = rawData;
 
-  year = d3.nest()
-  .key(function (d) { return d.Year; })
-  .entries(data);
+      year = d3.nest()
+      .key(function (d) { return d.Year; })
+      .entries(data);
+
+      race = d3.nest()
+      .key(function (d) { return d.Race; })
+      .entries(data);
+
+      gender = d3.nest()
+      .key(function (d) { return d.Gender; })
+      .entries(data);
 
 
-  race = d3.nest()
-  .key(function (d) { return d.Race; })
-  .entries(data);
+      Cornell = d3.nest()
+      .key(function (d) { return d.Cornell; })
+      .entries(data);
+    }
 
+    d3.csv("RaceByYearForUndergradEngineering2.csv", mutateRow, callback);
 
-  Cornell = d3.nest()
-  .key(function (d) { return d.Cornell; })
-  .entries(data);
-}
-
-d3.csv("RaceByYearForUndergradEngineering2.csv", mutateRow, callback);
-
-</script>
+  </script>
 </body>
 </html>
