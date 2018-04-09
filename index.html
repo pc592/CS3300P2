@@ -13,6 +13,7 @@
       Number of datapoints:
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
    </div>-->
+   <input id ="slider" type="range" min="1996" max="2016" value = "2005">
     <script>
       // to access a particular school based on a particular year and race use: 
       // Object.values(year[0])[1][13].Cornell
@@ -20,13 +21,21 @@
       // [1] - the value list
       // [13] - the 14th object ("race")
       // .Cornell pulls value for particular school
-      
-      var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell", "Harvard", "Princeton", "UPenn", "Yale"]
+
+      var slideInput = d3.select("#slider").on("input", function(){
+            console.log(this.value);
+            //this needs to correspond with a value 0-23 (this value goes in the x for year[x] in the comment above)
+            //this value along with a selected school will determine the data to display
+            //perform update
+          });
+
+      //don't think we need school_list or school_maps anymore
+      // var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell", "Harvard", "Princeton", "UPenn", "Yale"]
+      // var school_maps = [];
       var data;
       var year;
       var race;
       var gender;
-      var school_maps = [];
 
       function mutateRow(row) {
         var newRow = {};
