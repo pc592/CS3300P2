@@ -9,14 +9,17 @@
   </style>
 
   <body>
-    <div>
+    <!--<div>
       Number of datapoints:
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
-   </div>
+   </div>-->
     <script>
-
+      var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell", "Harvard", "Princeton", "UPenn", "Yale"]
       var data;
       var year;
+      var race;
+      var gender;
+      var school_maps = [];
 
       function mutateRow(row) {
         var newRow = {};
@@ -49,78 +52,91 @@
         gender = d3.nest()
         .key(function (d) { return d.Gender; })
         .entries(data);
+
+        var width = 960,
+            height = 500 - 29; // adjust for height of input bar div
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        // draw and append the container
+        var svg = d3.select("body").append("svg")
+          .attr("width", width).attr("height", height);
+        // set the thickness of the inner and outer radii
+        var min = Math.min(width, height);
+        var oRadius = min / 2;
+        var iRadius = min / 2.5;
+        // construct default pie laoyut
+        var pie = d3.pie().value(function(d){ return d; }).sort(null);
+        // construct arc generator
+        var arc = d3.arc()
+          .outerRadius(oRadius)
+          .innerRadius(iRadius);
+        // creates the pie chart container
+        var g = svg.append('g')
+        var g = svg.append('g')
+          .attr('transform', function(){
+            if ( window.innerWidth >= 960 ) var shiftWidth = width / 2;
+            if ( window.innerWidth < 960 ) var shiftWidth = width / 3;
+            return 'translate(' + shiftWidth + ',' + height / 2 + ')';
+          })
+        // generate random data
+        var donut_data= makeDataSchool(school_list);
+        //var donut_data = makeData(+document.getElementById("datacount").value);
+        console.log(donut_data)
+        // enter data and draw pie chart
+        var path = g.datum(donut_data).selectAll("path")
+          .data(pie)
+          .enter().append("path")
+            .attr("class","piechart")
+            .attr("fill", function(d,i){ return color(i); })
+            .attr("d", arc)
+            .each(function(d){ this._current = d; })
+        function render(){
+          // generate new random data
+          //donut_data = makeData(+document.getElementById("datacount").value);
+          donut_data= makeDataSchool(school_list)
+          // add transition to new path
+          g.datum(donut_data).selectAll("path").data(pie).transition().duration(1000).attrTween("d", arcTween)
+          // add any new paths
+          g.datum(donut_data).selectAll("path")
+            .data(pie)
+          .enter().append("path")
+            .attr("class","piechart")
+            .attr("fill", function(d,i){ return color(i); })
+            .attr("d", arc)
+            .each(function(d){ this._current = d; })
+          // remove data not being used
+          g.datum(donut_data).selectAll("path")
+            .data(pie).exit().remove();
+        }
+        render();
+        setInterval(render,2000);
+        function makeData(size){
+          return d3.range(size).map(function(item){
+           return Math.random()*100;
+          });
+        };
+
+        //the circle should be the diversity distribution from the school
+        //selected, during the selected year
+        function makeDataSchool(school_list){
+          return d3.range(school_list.length).map(function(item) {
+            //console.log(school_list[item]);
+            //console.log(data[0]);
+            return data[0][school_list[item]];
+          });
+        };
+        // Store the displayed angles in _current.
+        // Then, interpolate from _current to the new angles.
+        // During the transition, _current is updated in-place by d3.interpolate.
+        function arcTween(a) {
+          var i = d3.interpolate(this._current, a);
+          this._current = i(0);
+          return function(t) {
+            return arc(i(t));
+          };
+        }
       }
 
       d3.csv("RaceByYearForUndergradEngineering2.csv", mutateRow, callback);
-
-      var width = 960,
-          height = 500 - 29; // adjust for height of input bar div
-      var color = d3.scaleOrdinal(d3.schemeCategory10);
-      // draw and append the container
-      var svg = d3.select("body").append("svg")
-        .attr("width", width).attr("height", height);
-      // set the thickness of the inner and outer radii
-      var min = Math.min(width, height);
-      var oRadius = min / 2 * 0.9;
-      var iRadius = min / 2 * 0.85;
-      // construct default pie laoyut
-      var pie = d3.pie().value(function(d){ return d; }).sort(null);
-      // construct arc generator
-      var arc = d3.arc()
-        .outerRadius(oRadius)
-        .innerRadius(iRadius);
-      // creates the pie chart container
-      var g = svg.append('g')
-      var g = svg.append('g')
-        .attr('transform', function(){
-          if ( window.innerWidth >= 960 ) var shiftWidth = width / 2;
-          if ( window.innerWidth < 960 ) var shiftWidth = width / 3;
-          return 'translate(' + shiftWidth + ',' + height / 2 + ')';
-        })
-      // generate random data
-      var data = makeData(+document.getElementById("datacount").value);
-      // enter data and draw pie chart
-      var path = g.datum(data).selectAll("path")
-        .data(pie)
-        .enter().append("path")
-          .attr("class","piechart")
-          .attr("fill", function(d,i){ return color(i); })
-          .attr("d", arc)
-          .each(function(d){ this._current = d; })
-      function render(){
-        // generate new random data
-        data = makeData(+document.getElementById("datacount").value);
-        // add transition to new path
-        g.datum(data).selectAll("path").data(pie).transition().duration(1000).attrTween("d", arcTween)
-        // add any new paths
-        g.datum(data).selectAll("path")
-          .data(pie)
-        .enter().append("path")
-          .attr("class","piechart")
-          .attr("fill", function(d,i){ return color(i); })
-          .attr("d", arc)
-          .each(function(d){ this._current = d; })
-        // remove data not being used
-        g.datum(data).selectAll("path")
-          .data(pie).exit().remove();
-      }
-      render();
-      setInterval(render,2000);
-      function makeData(size){
-        return d3.range(size).map(function(item){
-         return Math.random()*100;
-        });
-      };
-      // Store the displayed angles in _current.
-      // Then, interpolate from _current to the new angles.
-      // During the transition, _current is updated in-place by d3.interpolate.
-      function arcTween(a) {
-        var i = d3.interpolate(this._current, a);
-        this._current = i(0);
-        return function(t) {
-          return arc(i(t));
-        };
-      }
 
     </script>
   </body>
