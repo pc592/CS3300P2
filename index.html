@@ -14,6 +14,13 @@
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
    </div>-->
     <script>
+      // to access a particular school based on a particular year and race use: 
+      // Object.values(year[0])[1][13].Cornell
+      // year[0] - the actual year
+      // [1] - the value list
+      // [13] - the 14th object ("race")
+      // .Cornell pulls value for particular school
+      
       var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell", "Harvard", "Princeton", "UPenn", "Yale"]
       var data;
       var year;
@@ -56,19 +63,24 @@
         var width = 960,
             height = 500 - 29; // adjust for height of input bar div
         var color = d3.scaleOrdinal(d3.schemeCategory10);
+
         // draw and append the container
         var svg = d3.select("body").append("svg")
           .attr("width", width).attr("height", height);
+
         // set the thickness of the inner and outer radii
         var min = Math.min(width, height);
         var oRadius = min / 2;
         var iRadius = min / 2.5;
+
         // construct default pie laoyut
         var pie = d3.pie().value(function(d){ return d; }).sort(null);
+
         // construct arc generator
         var arc = d3.arc()
           .outerRadius(oRadius)
           .innerRadius(iRadius);
+
         // creates the pie chart container
         var g = svg.append('g')
         var g = svg.append('g')
@@ -77,10 +89,12 @@
             if ( window.innerWidth < 960 ) var shiftWidth = width / 3;
             return 'translate(' + shiftWidth + ',' + height / 2 + ')';
           })
-        // generate random data
+
+        // grab data
         var donut_data= makeDataSchool(school_list);
         //var donut_data = makeData(+document.getElementById("datacount").value);
         console.log(donut_data)
+
         // enter data and draw pie chart
         var path = g.datum(donut_data).selectAll("path")
           .data(pie)
@@ -89,6 +103,7 @@
             .attr("fill", function(d,i){ return color(i); })
             .attr("d", arc)
             .each(function(d){ this._current = d; })
+
         function render(){
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
@@ -124,6 +139,7 @@
             return data[0][school_list[item]];
           });
         };
+
         // Store the displayed angles in _current.
         // Then, interpolate from _current to the new angles.
         // During the transition, _current is updated in-place by d3.interpolate.
