@@ -13,7 +13,8 @@
       Number of datapoints:
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
     </div>-->
-    <!-- <input id ="slider" type="range" min="1996" max="2016" value = "2005"> -->
+    <!-- <input id ="slider1" type="range" min="1996" max="2016" value = "2005"> -->
+    <!-- <input id ="slider2" type="range" min="1996" max="2016" value = "2005"> -->
     <script>
       var data;
       var year;
@@ -54,8 +55,8 @@
         .key(function (d) { return d.Gender; })
         .entries(data);
 
-        createVisualization();
-        createVisualization();
+        createVisualization("1");
+        createVisualization("2");
       }
 
       function prettyPrintRaceName(d) {
@@ -77,36 +78,33 @@
       var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell", "Harvard", "Princeton", "UPenn", "Yale"]
       // var school_maps = [];
 
-      function createVisualization() {
+      function createVisualization(num) {
 
-        var slideInput = d3.select("#slider").on("input", function(){
+        var slideInput = d3.select("#slider"+num).on("input", function(){
           console.log(this.value);
           //this needs to correspond with a value 0-23 (this value goes in the x for year[x] in the comment above)
           //this value along with a selected school will determine the data to display
           //perform update
         });
 
-
-        // var width = 960,
-        //     height = 500 - 29; // adjust for height of input bar div
-        var small = Math.min(window.innerHeight-10,window.innerWidth/2-10);
-        console.log(small)
-        console.log(window.innerHeight)
-        console.log(window.innerWidth)
-
-        var width = small;
-        var height = small;
+        winHeight = window.innerHeight-10;
+        winWidth = window.innerWidth-10;
+        var side = Math.min(winHeight,winWidth);
 
         var color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // draw and append the container
+        // play with width/height percentages to make room for buttons/sliders/selectors
+        // **must be percentages to work with viewBox;
         var svg = d3.select("body").append("svg")
-          .attr("width", width).attr("height", height);
+          .attr("id","graph"+num)
+          .attr("width", "50%")   // each svg takes up 50% of the window
+          .attr("height", "75%")  // each svg takes up 75% of the window
+          .attr("viewBox", "0 0 "+side+" "+side);
 
         // set the thickness of the inner and outer radii
-        var min = Math.min(width, height);
-        var oRadius = min / 2;
-        var iRadius = min / 2.5;
+        var oRadius = side / 2;
+        var iRadius = side / 2.75;
 
         // construct default pie laoyut
         var pie = d3.pie().value(function(d){ return d; }).sort(null);
@@ -118,9 +116,8 @@
 
         // creates the pie chart container
         var g = svg.append('g')
-        var g = svg.append('g')
           .attr('transform', function(){
-            return 'translate(' + width/2 + ',' + height / 2 + ')';
+            return 'translate(' + side/2 + ',' + side / 2 + ')';
           })
 
         // grab data
