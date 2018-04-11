@@ -154,27 +154,27 @@
         // create/update pie chart
         var pathG = paths.enter().append("g");
         pathG.append("path")
-              .attr("class","piechartArcs")
-            .merge(pathG)
-              .attr("d", arc)
-              .attr("fill", function(d,i){ return color(i); })
-              .each(function(d,i) {
-                // add a hidden arc for each section, extended, for labelling
-                // unsure if there's a better way, right now it looks like every section
-                //   adds hidden arcs for every section--so there's section*section arcs?
-                var newArc = d3.arc()
-                  .outerRadius(oRadius)
-                  .innerRadius(iRadius)
-                  .startAngle(arc.startAngle()(d))
-                  .endAngle(arc.endAngle()(d)+50);
+            .attr("class","piechartArcs")
+          .merge(pathG)
+            .attr("d", arc)
+            .attr("fill", function(d,i){ return color(i); })
+            .each(function(d,i) {
+              // add a hidden arc for each section, extended, for labelling
+              // unsure if there's a better way, right now it looks like every section
+              //   adds hidden arcs for every section--so there's section*section arcs?
+              var newArc = d3.arc()
+                .outerRadius(oRadius)
+                .innerRadius(iRadius)
+                .startAngle(arc.startAngle()(d))
+                .endAngle(arc.endAngle()(d)+50);
 
-                //Create a new invisible arc that the text can flow along
-                pathG.append("path")
-                  .attr("class", "hiddenArcs")
-                  .attr("id", "arc"+i)
-                  .attr("d", newArc)
-                  .style("fill", "none");
-              })
+              //Create a new invisible arc that the text can flow along
+              pathG.append("path")
+                .attr("class", "hiddenArcs")
+                .attr("id", "arc"+i)
+                .attr("d", newArc)
+                .style("fill", "none");
+            })
 
         // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
         // Add labels
