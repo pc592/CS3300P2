@@ -20,6 +20,7 @@
       var year;
       var race;
       var gender;
+      var returnedData; //for makeDataSchool
 
       d3.csv("/data/RaceByYear.csv", parseRow, callback);
 
@@ -79,11 +80,19 @@
       // var school_maps = [];
 
       function createVisualization(num) {
+        //for makeDataSchool
+        //Will store race names as the value, index number as key
+        //Indexes will match the keys of the data created in makeDataSchool
+        var racedic = d3.map();
 
+        // year from slider
+        var yearInput;
+
+        //not implemented until labels are figured out
         var slideInput = d3.select("#slider"+num).on("input", function(){
           console.log(this.value);
-          //this needs to correspond with a value 0-23 (this value goes in the x for year[x] in the comment above)
-          //this value along with a selected school will determine the data to display
+          //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
+          yearInput = this - 1996;
           //perform update
         });
 
@@ -102,6 +111,9 @@
           .attr("height", "75%")  // each svg takes up 75% of the window
           .attr("viewBox", "0 0 "+side+" "+side);
 
+          svg.append("g")
+            .attr("class", "labels");
+
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
         var iRadius = side / 2.75;
@@ -114,6 +126,11 @@
           .outerRadius(oRadius)
           .innerRadius(iRadius);
 
+        // for labels
+        var labelArc = d3.arc()
+          .outerRadius(oRadius * 1.5)
+          .innerRadius(iRadius * 1.5);
+
         // creates the pie chart container
         var g = svg.append('g')
           .attr('transform', function(){
@@ -125,14 +142,29 @@
         //var donut_data = makeData(+document.getElementById("datacount").value);
         console.log(donut_data)
 
+        // was using this for labels
+        var key = function(d){return racedic.get(d.index)}
+
         // enter data and draw pie chart
         var path = g.datum(donut_data).selectAll("path")
-          .data(pie)
+          .data(pie(donut_data), key)
           .enter().append("path")
-            .attr("class","piechart")
-            .attr("fill", function(d,i){ return color(i); })
+            .attr("class","piechart labels")
+            .attr("fill", function(d,i){ console.log("help " + i); return color(i); })
             .attr("d", arc)
-            .each(function(d){ this._current = d; })
+            //.text(function(d) {return racedic.get(d.index);})
+            //.attr("transform", function(d) {return "translate(" + labelArc.centroid(d.index) + ")";})
+            .each(function(d){ this._current = d; });
+
+        //Where we are trying to add labels
+        var text= g.selectAll(".labels")
+          //.data(donut_data)
+          //.enter().append("text")
+          .append("text")
+          .text(function(d) {console.log("rd get is " + racedic.get(d.index)); return racedic.get(d.index);});
+          //.attr("transform", function(d) {console.log("d is");console.log(labelArc.centroid(0.5)); var x = labelArc.centroid(d.value); return "translate(" + x[0] + "," + x[1] + ")";})
+
+        console.log(text);
 
         function render(){
           // generate new random data
@@ -142,32 +174,41 @@
           g.datum(donut_data).selectAll("path").data(pie).transition().duration(1000).attrTween("d", arcTween)
           // add any new paths
           g.datum(donut_data).selectAll("path")
-            .data(pie)
-          .enter().append("path")
+            .data(pie, key)
+            .enter().append("path")
             .attr("class","piechart")
             .attr("fill", function(d,i){ return color(i); })
             .attr("d", arc)
-            .each(function(d){ this._current = d; })
+            .each(function(d){ console.log(d); this._current = d; })
+
           // remove data not being used
           g.datum(donut_data).selectAll("path")
             .data(pie).exit().remove();
         }
-        render();
-        setInterval(render,2000);
-        function makeData(size){
+       // render();
+        //setInterval(render,2000);
+
+        //Old function not needed
+        /*function makeData(size){
           return d3.range(size).map(function(item){
            return Math.random()*100;
           });
-        };
+        };*/
 
         //the circle should be the diversity distribution from the school
         //selected, during the selected year
         function makeDataSchool(school_list){
-          return d3.range(school_list.length).map(function(item) {
-            //console.log(school_list[item]);
-            //console.log(data[0]);
-            return data[0][school_list[item]];
+          //will use yearInput in place of the 0 in all of the following
+          var races= Object.values(year[0])[1];
+          returnedData = d3.range(races.length).map(function(item) {
+            // console.log("#of race: " + Object.values(year[0])[1][item].Cornell);
+            var rac = Object.values(year[0])[1][item];
+            var abvName = rac.Race;
+            racedic.set(item, abvName);
+            //console.log(racedic);
+            return Object.values(year[0])[1][item].Cornell;
           });
+          return returnedData;
         };
 
         // Store the displayed angles in _current.
