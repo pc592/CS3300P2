@@ -9,6 +9,7 @@
     /*body { font-family: Arial, sans-serif; font-size: 12;}*/
 
     .piechartLabels { font-family: Arial; color: black; font-size: 30px; }
+    .piechartArcs:hover {opacity:0.9;}
 
   </style>
 
@@ -150,7 +151,7 @@
 
         // remove data if unneeded
         paths.exit().remove();
-        
+
         // create/update pie chart
         var pathG = paths.enter().append("g");
         pathG.append("path")
