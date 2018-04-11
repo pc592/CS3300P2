@@ -5,7 +5,11 @@
   </head>
 
   <style>
-    body { font-family: Arial, sans-serif; font-size: 12;}
+
+    /*body { font-family: Arial, sans-serif; font-size: 12;}*/
+
+    .piechartLabels { font-family: Arial; color: black; font-size: 30px; }
+
   </style>
 
   <body>
@@ -33,8 +37,9 @@
         // var splitStr;
         // if (newRow["Gender"] == "Male") { splitStr = ' men';
         // } else { splitStr = ' women'; }
-        // newRow["Race"] = row["Race"]//.split(splitStr)[0] + "["+newRow["Year"]+"]";
-        
+        var splitStr = " ("
+        newRow["RaceName"] = row["Race"].split(splitStr)[0];
+
         newRow["Race"] = row["Race"].split('(')[0] + "["+newRow["Year"]+"]";
 
         newRow["Brown"] = Number(row["Brown University"])
@@ -68,13 +73,11 @@
         createVisualization("2");
       }
 
-      // function prettyPrintRaceName(d) {
-      //   if (d.Gender == "Male") {
-      //     return d.Race.split(' men')[0];
-      //   } else {
-      //     return d.Race.split(' women')[0];
-      //   }
-      // }
+
+      /* Helper functions for translating and rotating with inputs */
+      function translate (x,y) { return "translate(" + x + "," + y + ")"; };
+      function rotate (a,x,y) { return "rotate(" + a + " " + x + "," + y + ")"};
+
 
       // to access a particular school based on a particular year and race use: 
       // Object.values(year[0])[1][13].Cornell
@@ -84,7 +87,8 @@
       // .Cornell pulls value for particular school
 
       //don't think we need school_list or school_maps anymore
-      var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell", "Harvard", "Princeton", "UPenn", "Yale"]
+      var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell",
+                        "Harvard", "Princeton", "UPenn", "Yale"]
       // var school_maps = [];
 
       function createVisualization(num) {
@@ -97,12 +101,13 @@
         var yearInput;
 
         //not implemented until labels are figured out
-        var slideInput = d3.select("#slider"+num).on("input", function(){
-          console.log(this.value);
-          //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
-          yearInput = this - 1996;
-          //perform update
-        });
+        var slideInput = d3.select("#slider"+num)
+          .on("input", function(){
+            console.log(this.value);
+            //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
+            yearInput = this - 1996;
+            //perform update
+          });
 
         winHeight = window.innerHeight-10;
         winWidth = window.innerWidth-10;
@@ -117,94 +122,88 @@
           .attr("id","graph"+num)
           .attr("width", "50%")   // each svg takes up 50% of the window
           .attr("height", "75%")  // each svg takes up 75% of the window
-          .attr("viewBox", "0 0 "+side+" "+side);
-
-          svg.append("g")
-            .attr("class", "labels");
+          .attr("viewBox", "0 0 "+side+" "+side);   // allows for relative resizing
 
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
         var iRadius = side / 2.75;
-
-        // construct default pie laoyut
-        var pie = d3.pie().value(function(d){ return d; }).sort(null);
 
         // construct arc generator
         var arc = d3.arc()
           .outerRadius(oRadius)
           .innerRadius(iRadius);
 
-        // for labels
-        var labelArc = d3.arc()
-          .outerRadius(oRadius * 1.5)
-          .innerRadius(iRadius * 1.5);
-
         // creates the pie chart container
-        var g = svg.append('g')
-          .attr('transform', function(){
-            return 'translate(' + side/2 + ',' + side / 2 + ')';
-          })
+        var g = svg.append("g")
+          .attr("transform", translate(side/2,side/2));
 
+        // construct default pie laoyut
+        var pie = d3.pie().value(function(d){ return d; }).sort(null);
         // grab data
         var donut_data= makeDataSchool(school_list);
         //var donut_data = makeData(+document.getElementById("datacount").value);
         // console.log(donut_data)
 
-        // was using this for labels
-        var labelKey = function(d){return racedic.get(d.index)}
+        // enter data
+        var paths = g.datum(donut_data).selectAll("path")
+          .data(pie(donut_data))
 
-        // enter data and draw pie chart
-        var path = g.datum(donut_data).selectAll("path")
-          .data(pie(donut_data), labelKey)
-          .enter().append("path")
-            .attr("class","piechartArcs")
-            .attr("fill", function(d,i){ return color(i); })
-            .attr("d", arc)
-            .each(function(d,i) {
+        // remove data if unneeded
+        paths.exit().remove();
+        
+        // create/update pie chart
+        var pathG = paths.enter().append("g");
+        pathG.append("path")
+              .attr("class","piechartArcs")
+            .merge(pathG)
+              .attr("d", arc)
+              .attr("fill", function(d,i){ return color(i); })
+              .each(function(d,i) {
+                // add a hidden arc for each section, extended, for labelling
+                // unsure if there's a better way, right now it looks like every section
+                //   adds hidden arcs for every section--so there's section*section arcs?
+                var newArc = d3.arc()
+                  .outerRadius(oRadius)
+                  .innerRadius(iRadius)
+                  .startAngle(arc.startAngle()(d))
+                  .endAngle(arc.endAngle()(d)+50);
 
-              var newArc = d3.arc()
-              .outerRadius(oRadius)
-              .innerRadius(iRadius)
-              .startAngle(arc.startAngle()(d))
-              .endAngle(arc.endAngle()(d)+100);
-
-              //Create a new invisible arc that the text can flow along
-              svg.append("path")
+                //Create a new invisible arc that the text can flow along
+                pathG.append("path")
                   .attr("class", "hiddenArcs")
                   .attr("id", "arc"+i)
                   .attr("d", newArc)
                   .style("fill", "none");
-                  })
-
+              })
 
         // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
-        //Where we are trying to add labels
-        var text= g.datum(donut_data).selectAll("text")
-          .data(pie(donut_data))
-          .enter().append("text")
-          .attr("class","piechartLabels")
-          // .attr("x", 25)
-          .attr("dy", -13)
-          .append("textPath")
-          // .attr("startOffset","50%")
-          // .style("text-anchor","middle")
-          .attr("xlink:href",function(d,i){return "#arc"+i;})
-          .text(function(d) {
-              var text = racedic.get(d.index)//.split(' [')[0];
-              return text;
-            })
-          .attr("fill", "black")
-          .attr("font-size", "20")
+        // Add labels
+        pathG.append("text")
+            .attr("class","piechartLabels")
+            // .attr("x", 25)
+            // .attr("startOffset","50%")
+            // .style("text-anchor","middle")
+            .attr("dy", -13)
+          .merge(pathG)
+            .append("textPath")
+            .attr("xlink:href",function(d,i){return "#arc"+i;})
+            .text(function(d) { return racedic.get(d.index); })
+            // .on("mouseover", function (d) {
+            //     // this.attr('visibility', 'visible');
+            // })
 
-        function render(labelKey){
+        function render(){
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
-          donut_data= makeDataSchool(school_list)
+          // donut_data= makeDataSchool(school_list)
           // add transition to new path
-          g.datum(donut_data).selectAll("path").data(pie).transition().duration(1000).attrTween("d", arcTween)
+          g.datum(donut_data).selectAll("path")
+            .data(pie)
+            .transition().duration(1000)
+            .attrTween("d", arcTween)
           // add any new paths
           g.datum(donut_data).selectAll("path")
-            .data(pie, labelKey)
+            .data(pie)
             .enter().append("path")
             .attr("class","piechart")
             .attr("fill", function(d,i){ return color(i); })
@@ -233,7 +232,7 @@
           returnedData = d3.range(races.length).map(function(item) {
             // console.log("#of race: " + Object.values(year[0])[1][item].Cornell);
             var rac = Object.values(year[0])[1][item];
-            var abvName = rac.Race;
+            var abvName = rac.RaceName;
             racedic.set(item, abvName);
             //console.log(racedic);
             return Object.values(year[0])[1][item].Cornell;
