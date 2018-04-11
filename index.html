@@ -26,14 +26,15 @@
 
       function parseRow(row) {
         var newRow = {};
-        
+
         newRow["Gender"] = row["Gender"]
         newRow["Year"] = Number(row["Year"])
 
-        var splitStr;
-        if (newRow["Gender"] == "Male") { splitStr = ' men';
-        } else { splitStr = ' women'; }
-        newRow["Race"] = row["Race"]//.split(splitStr)[0] + "["+newRow["Year"]+"]";
+        // var splitStr;
+        // if (newRow["Gender"] == "Male") { splitStr = ' men';
+        // } else { splitStr = ' women'; }
+        // newRow["Race"] = row["Race"]//.split(splitStr)[0] + "["+newRow["Year"]+"]";
+        
         newRow["Race"] = row["Race"].split('(')[0] + "["+newRow["Year"]+"]";
 
         newRow["Brown"] = Number(row["Brown University"])
