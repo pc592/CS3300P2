@@ -26,14 +26,16 @@
 
       function parseRow(row) {
         var newRow = {};
+        
         newRow["Gender"] = row["Gender"]
-        newRow["Race"] = row["Race"]
-        if (newRow["Gender"] == "Male") {
-          newRow["RaceName"] = row["Race"].split(' men')[0];
-        } else {
-          newRow["RaceName"] = row["Race"].split(' women')[0];
-        }
         newRow["Year"] = Number(row["Year"])
+
+        var splitStr;
+        if (newRow["Gender"] == "Male") { splitStr = ' men';
+        } else { splitStr = ' women'; }
+        newRow["Race"] = row["Race"]//.split(splitStr)[0] + "["+newRow["Year"]+"]";
+        newRow["Race"] = row["Race"].split('(')[0] + "["+newRow["Year"]+"]";
+
         newRow["Brown"] = Number(row["Brown University"])
         newRow["Columbia"] = Number(row["Columbia University in the City of New York"])
         newRow["Cornell"] = Number(row["Cornell University"])
@@ -42,7 +44,7 @@
         newRow["Princeton"] = Number(row["Princeton University"])
         newRow["UPenn"] = Number(row["University of Pennsylvania"])
         newRow["Yale"] = Number(row["Yale University"])
-        // console.log(newRow)
+
         return newRow;
       }
 
@@ -145,7 +147,7 @@
         // grab data
         var donut_data= makeDataSchool(school_list);
         //var donut_data = makeData(+document.getElementById("datacount").value);
-        console.log(donut_data)
+        // console.log(donut_data)
 
         // was using this for labels
         var labelKey = function(d){return racedic.get(d.index)}
@@ -155,7 +157,7 @@
           .data(pie(donut_data), labelKey)
           .enter().append("path")
             .attr("class","piechartArcs")
-            .attr("fill", function(d,i){ console.log("help " + i); return color(i); })
+            .attr("fill", function(d,i){ return color(i); })
             .attr("d", arc)
             .each(function(d,i) {
 
@@ -187,8 +189,7 @@
           // .style("text-anchor","middle")
           .attr("xlink:href",function(d,i){return "#arc"+i;})
           .text(function(d) {
-              console.log("rd get is " + racedic.get(d.index));
-              var text = racedic.get(d.index);
+              var text = racedic.get(d.index)//.split(' [')[0];
               return text;
             })
           .attr("fill", "black")
