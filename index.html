@@ -28,6 +28,11 @@
         var newRow = {};
         newRow["Gender"] = row["Gender"]
         newRow["Race"] = row["Race"]
+        if (newRow["Gender"] == "Male") {
+          newRow["RaceName"] = row["Race"].split(' men')[0];
+        } else {
+          newRow["RaceName"] = row["Race"].split(' women')[0];
+        }
         newRow["Year"] = Number(row["Year"])
         newRow["Brown"] = Number(row["Brown University"])
         newRow["Columbia"] = Number(row["Columbia University in the City of New York"])
@@ -60,13 +65,13 @@
         createVisualization("2");
       }
 
-      function prettyPrintRaceName(d) {
-        if (d.Gender == "Male") {
-          return d.Race.split(' men')[0];
-        } else {
-          return d.Race.split(' women')[0];
-        }
-      }
+      // function prettyPrintRaceName(d) {
+      //   if (d.Gender == "Male") {
+      //     return d.Race.split(' men')[0];
+      //   } else {
+      //     return d.Race.split(' women')[0];
+      //   }
+      // }
 
       // to access a particular school based on a particular year and race use: 
       // Object.values(year[0])[1][13].Cornell
@@ -143,30 +148,53 @@
         console.log(donut_data)
 
         // was using this for labels
-        var key = function(d){return racedic.get(d.index)}
+        var labelKey = function(d){return racedic.get(d.index)}
 
         // enter data and draw pie chart
         var path = g.datum(donut_data).selectAll("path")
-          .data(pie(donut_data), key)
+          .data(pie(donut_data), labelKey)
           .enter().append("path")
-            .attr("class","piechart labels")
+            .attr("class","piechartArcs")
             .attr("fill", function(d,i){ console.log("help " + i); return color(i); })
             .attr("d", arc)
-            //.text(function(d) {return racedic.get(d.index);})
-            //.attr("transform", function(d) {return "translate(" + labelArc.centroid(d.index) + ")";})
-            .each(function(d){ this._current = d; });
+            .each(function(d,i) {
 
+              var newArc = d3.arc()
+              .outerRadius(oRadius)
+              .innerRadius(iRadius)
+              .startAngle(arc.startAngle()(d))
+              .endAngle(arc.endAngle()(d)+100);
+
+              //Create a new invisible arc that the text can flow along
+              svg.append("path")
+                  .attr("class", "hiddenArcs")
+                  .attr("id", "arc"+i)
+                  .attr("d", newArc)
+                  .style("fill", "none");
+                  })
+
+
+        // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
         //Where we are trying to add labels
-        var text= g.selectAll(".labels")
-          //.data(donut_data)
-          //.enter().append("text")
-          .append("text")
-          .text(function(d) {console.log("rd get is " + racedic.get(d.index)); return racedic.get(d.index);});
-          //.attr("transform", function(d) {console.log("d is");console.log(labelArc.centroid(0.5)); var x = labelArc.centroid(d.value); return "translate(" + x[0] + "," + x[1] + ")";})
+        var text= g.datum(donut_data).selectAll("text")
+          .data(pie(donut_data))
+          .enter().append("text")
+          .attr("class","piechartLabels")
+          // .attr("x", 25)
+          .attr("dy", -13)
+          .append("textPath")
+          // .attr("startOffset","50%")
+          // .style("text-anchor","middle")
+          .attr("xlink:href",function(d,i){return "#arc"+i;})
+          .text(function(d) {
+              console.log("rd get is " + racedic.get(d.index));
+              var text = racedic.get(d.index);
+              return text;
+            })
+          .attr("fill", "black")
+          .attr("font-size", "20")
 
-        console.log(text);
-
-        function render(){
+        function render(labelKey){
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
           donut_data= makeDataSchool(school_list)
@@ -174,7 +202,7 @@
           g.datum(donut_data).selectAll("path").data(pie).transition().duration(1000).attrTween("d", arcTween)
           // add any new paths
           g.datum(donut_data).selectAll("path")
-            .data(pie, key)
+            .data(pie, labelKey)
             .enter().append("path")
             .attr("class","piechart")
             .attr("fill", function(d,i){ return color(i); })
