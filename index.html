@@ -56,6 +56,7 @@
 
     .labelArc {
       font-size:3vh;
+      opacity:0.8;
     }
 
     .labelArc:hover {
@@ -66,18 +67,18 @@
     .piechartLabels {
       font-family: Arial;
       color: black;
-      font-size: 3vh;
-      opacity: .8;
+      /*font-size: 3vh;*/
+      /*opacity: .8;*/
     }
 
     .piechartLabels:hover {
-      font-size:5vh;
-      opacity: 1;
+      /*font-size:5vh;*/
+      /*opacity: 1;*/
     }
 
-    .pieChartArcs { opacity:0.9; }
+    /*.pieChartArcs { opacity:0.9; }
 
-    .piechartArcs:hover { opacity:1; }
+    .piechartArcs:hover { opacity:1; }*/
 
   </style>
 
@@ -231,7 +232,7 @@
           .innerRadius(iRadius);
 
         var arcOver = d3.arc()
-        .outerRadius(oRadius + 4)
+        .outerRadius(oRadius + 10)
         .innerRadius(iRadius);
 
         var labelArc = d3.arc()
@@ -241,6 +242,13 @@
         // creates the pie chart container
         var g = svg.append("g")
           .attr("transform", translate(side/2,side/2));
+
+        g.append("image")
+          .attr("width","50%")
+          .attr("height","50%")
+          .attr("x","-25%")
+          .attr("y","-25%")
+          .attr("xlink:href", "images/Cornell.png");
 
         // construct default pie laoyut
         var pie = d3.pie().value(function(d){ return d; }).sort(null);
@@ -256,6 +264,7 @@
 
         // create/update pie chart
         var pathG = paths.enter().append("g").attr("class", "labelArc");
+
         pathG.append("path")
             .attr("class","piechartArcs")
           .merge(pathG)
@@ -318,13 +327,6 @@
         .text(function(d) {
             return race_shortened(racedic.get(d.index));
         });*/
-
-        pathG.append("image")
-          .attr("width","50%")
-          .attr("height","50%")
-          .attr("x","-25%")
-          .attr("y","-25%")
-          .attr("xlink:href", "images/Cornell.png");
 
         function render() {
 
