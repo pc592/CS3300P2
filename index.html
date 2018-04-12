@@ -54,14 +54,14 @@
       width:80%;
     }
 
-    .labelArc {
+    /*.labelArc {
       font-size:3vh;
     }
 
     .labelArc:hover {
         font-size:5vh;
         opacity:1;
-    }
+    }*/
 
     .piechartLabels {
       font-family: Arial;
@@ -255,9 +255,9 @@
         paths.exit().remove();
 
         // create/update pie chart
-        var pathG = paths.enter().append("g").attr("class", "labelArc");
+        var pathG = paths.enter().append("g");
         pathG.append("path")
-            .attr("class","piechartArcs")
+            .attr("class","piechartArcs labelArc")
           .merge(pathG)
             .attr("d", arc)
             .attr("fill", function(d,i){ return color(i); })
@@ -265,21 +265,22 @@
               this._current = d;
             })
             .on("mouseenter", function(d) {
+            d3.select(this.parentNode).select('text')
+              .style("font-size", "10vh")
             d3.select(this)
-               //.attr("opacity","1")
-               //.transition()
-               //.duration(500)
                .attr("d", arcOver)
                .attr("stroke-width",6);
             })
             .on("mouseleave", function(d) {
+            d3.select(this.parentNode).select('text')
+              .style("font-size", "4vh")
             d3.select(this).transition()
                .attr("d", arc)
                .attr("stroke","none");
             });;
-        var path_text= pathG
+        pathG
         .append("text")
-        .attr("class","piechartLabels labelArc")
+        .attr("class","piechartLabels")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
           var pos = arc.centroid(d);
@@ -366,7 +367,7 @@
 
         text.enter()
         .append("text")
-        .attr("class","piechartLabels labelArc")
+        .attr("class","piechartLabels")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
           var pos = arc.centroid(d);
