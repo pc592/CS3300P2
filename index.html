@@ -304,6 +304,7 @@
 
         text.enter()
         .append("text")
+        .attr("class","piechartLabels")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
           var pos = arc.centroid(d);
