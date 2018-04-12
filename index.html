@@ -53,6 +53,36 @@
       left:10%;
       width:80%;
     }
+    .sliderLabelMin {
+      position:absolute;
+      top:94%;
+      left:10%;
+      margin-left: -1vw;
+      font-family: Arial;
+      color: black;
+      font-size: 2vh;
+    }
+
+    .sliderLabelCur {
+      position:absolute;
+      margin-left: -1vw;
+      top:94%;
+      left:45%;
+      font-family: Arial;
+      color: black;
+      font-size: 2vh;
+    }
+
+    .sliderLabelMax {
+      position:absolute;
+      margin-left: -1vw;
+      top:94%;
+      left:90%;
+      font-family: Arial;
+      color: black;
+      font-size: 2vh;     
+    }
+
 
     /*.labelArc {
       font-size:3vh;
@@ -72,9 +102,11 @@
     }
 
     .piechartLabels:hover {
-      /*font-size:5vh;*/
-      /*opacity: 1;*/
+      font-size: 15vh;
+      /*opacity: .8;*/
     }
+
+
 
     /*.pieChartArcs { opacity:0.9; }
 
@@ -97,6 +129,9 @@
         </form>
         <svg id="donut1" class="donut"></svg>
         <input id ="slider1" type="range" min="1996" max="2016" value="2005" class="slider">
+        <text class=sliderLabelMin id="sliderMin1">1994</text>
+        <text class=sliderLabelCur id="sliderCur1">2005</text>
+        <text class=sliderLabelMax id="sliderMax1">2016</text>
       </div>
 
       <div id="div2" class="divSplit2">
@@ -112,6 +147,9 @@
         </form>
         <svg id="donut2" class="donut"></svg>
         <input id ="slider2" type="range" min="1996" max="2016" value="2005" class="slider">
+        <text class=sliderLabelMin id="sliderMin2">1994</text>
+        <text class=sliderLabelCur id="sliderCur2">2005</text>
+        <text class=sliderLabelMax id="sliderMax2">2016</text>
       </div>
     </div>
 
@@ -197,6 +235,10 @@
           .on("input", function(){
             //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
             yearInput = this.value - 1996;
+
+            d3.select("#sliderCur"+num).style("left",80/22*(2016-this.value)+10 + "%")
+            //TODO: update slidercur's placement [math..]
+
             //perform update
             render()
           });
