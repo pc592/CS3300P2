@@ -54,17 +54,30 @@
       width:80%;
     }
 
+    .labelArc {
+      font-size:3vh;
+    }
+
+    .labelArc:hover {
+        font-size:5vh;
+        opacity:1;
+    }
+
     .piechartLabels {
       font-family: Arial;
       color: black;
       font-size: 3vh;
+      opacity: .8;
     }
 
     .piechartLabels:hover {
       font-size:5vh;
+      opacity: 1;
     }
 
-    .piechartArcs:hover { opacity:0.9; }
+    .pieChartArcs { opacity:0.9; }
+
+    .piechartArcs:hover { opacity:1; }
 
   </style>
 
@@ -217,6 +230,10 @@
           .outerRadius(oRadius)
           .innerRadius(iRadius);
 
+        var arcOver = d3.arc()
+        .outerRadius(oRadius + 4)
+        .innerRadius(iRadius);
+
         var labelArc = d3.arc()
           .outerRadius(oRadius*1.2)
           .innerRadius(iRadius);
@@ -238,7 +255,7 @@
         paths.exit().remove();
 
         // create/update pie chart
-        var pathG = paths.enter().append("g");
+        var pathG = paths.enter().append("g").attr("class", "labelArc");
         pathG.append("path")
             .attr("class","piechartArcs")
           .merge(pathG)
@@ -246,14 +263,23 @@
             .attr("fill", function(d,i){ return color(i); })
             .each(function(d,i) {
               this._current = d;
-        })
-
-        var text = g.selectAll("text")
-        .data(pie(donut_data), function(d){console.log(racedic.get(d.index));return racedic.get(d.index); });
-
-        text.enter()
+            })
+            .on("mouseenter", function(d) {
+            d3.select(this)
+               //.attr("opacity","1")
+               //.transition()
+               //.duration(500)
+               .attr("d", arcOver)
+               .attr("stroke-width",6);
+            })
+            .on("mouseleave", function(d) {
+            d3.select(this).transition()
+               .attr("d", arc)
+               .attr("stroke","none");
+            });;
+        var path_text= pathG
         .append("text")
-        .attr("class","piechartLabels")
+        .attr("class","piechartLabels labelArc")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
           var pos = arc.centroid(d);
@@ -261,8 +287,37 @@
         })
         .style("text-anchor", "middle")
         .text(function(d) {
-            return (racedic.get(d.index));
+            return race_shortened(racedic.get(d.index));
         });
+
+        function race_shortened(race) {
+          var split_race= race.split(new RegExp("[ ]{1,}"))
+          if (split_race.length >= 3) {
+            return split_race[1].substring(0,3) + "." +
+                    split_race[split_race.length - 1].substring(0,3) + "."
+          }
+          var shortened= ""
+          for (var i = 0; i < split_race.length; i++) {
+            shortened = shortened + split_race[i].substring(0,2) + "."
+          }
+          return shortened
+        }
+
+        /*var text = g.selectAll("text")
+        .data(pie(donut_data), function(d){console.log(race_shortened(racedic.get(d.index)));return race_shortened(racedic.get(d.index)); });
+
+        text.enter()
+        .append("text")
+        .attr("class","piechartLabels labelArc")
+        .attr("dy", ".35em")
+        .attr("transform", function(d) {
+          var pos = arc.centroid(d);
+          return "translate(" + pos + ")";
+        })
+        .style("text-anchor", "middle")
+        .text(function(d) {
+            return race_shortened(racedic.get(d.index));
+        });*/
 
         pathG.append("image")
           .attr("width","50%")
@@ -285,7 +340,7 @@
           g.datum(donut_data).selectAll("path")
             .data(pie)
             .enter().append("path")
-            .attr("class","piechart")
+            .attr("class","piechart labelArc")
             .attr("fill", function(d,i){ return color(i); })
             .attr("d", arc)
             .each(function(d){ this._current = d; })
@@ -311,7 +366,7 @@
 
         text.enter()
         .append("text")
-        .attr("class","piechartLabels")
+        .attr("class","piechartLabels labelArc")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
           var pos = arc.centroid(d);
@@ -319,7 +374,7 @@
         })
         .style("text-anchor", "middle")
         .text(function(d) {
-            return (racedic.get(d.index));
+            return race_shortened(racedic.get(d.index));
         });
 
         }
