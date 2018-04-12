@@ -6,40 +6,96 @@
 
   <style>
 
-    /*body { font-family: Arial, sans-serif; font-size: 12;}*/
+    body { font-size: 100%;}
 
-    .piechartLabels { font-family: Arial; color: black; font-size: 30px; }
-    .piechartArcs:hover {opacity:0.9;}
+    .divContainer {
+      position:relative;
+      width:100%;
+      height:50%;
+    }
+    .divSplit1 {
+      position:absolute;
+      width:50%;
+      height:100%;
+      left:0%;
+    }
+    .divSplit2 {
+      position:absolute;
+      width:50%;
+      height:100%;
+      left:50%;
+    }
+    .buttons {
+      position:absolute;
+      top:25%;
+      left:10%;
+      font-family: Arial;
+      color: black;
+      font-size: 2vh;
+    }
+    .donut {
+      position:absolute;
+      top:10%;
+      left:40%;
+    }
+    .slider {
+      position:absolute;
+      top:90%;
+      left:10%;
+      width:80%;
+    }
+
+    .piechartLabels {
+      font-family: Arial;
+      color: black;
+      font-size: 2vh;
+    }
+    .piechartArcs:hover { opacity:0.9; }
 
   </style>
 
   <body>
+    <script>
+        var winHeight = window.innerHeight-10;
+        var winWidth = window.innerWidth-10;
+        var side = Math.min(winHeight,winWidth);
+    </script>
     <!--<div>
       Number of datapoints:
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
     </div>-->
-    <input id ="slider1" type="range" min="1996" max="2016" value = "2005">
-    <input id ="slider2" type="range" min="1996" max="2016" value = "2005">
-    <form action="">
-      <input type="radio" name="schoolName1" value="Brown"> Brown<br>
-      <input type="radio" name="schoolName1" value="Columbia"> Columbia<br>
-      <input type="radio" name="schoolName1" value="Cornell" checked> Cornell<br>
-      <input type="radio" name="schoolName1" value="Dartmouth"> Dartmouth<br>
-      <input type="radio" name="schoolName1" value="Harvard"> Harvard<br>
-      <input type="radio" name="schoolName1" value="Pennsylvania"> Pennsylvania<br>
-      <input type="radio" name="schoolName1" value="Princeton"> Princeton<br>
-      <input type="radio" name="schoolName1" value="Yale"> Yale<br>
-    </form>
-    <form action="">
-      <input type="radio" name="schoolName2" value="Brown"> Brown<br>
-      <input type="radio" name="schoolName2" value="Columbia"> Columbia<br>
-      <input type="radio" name="schoolName2" value="Cornell" checked> Cornell<br>
-      <input type="radio" name="schoolName2" value="Dartmouth"> Dartmouth<br>
-      <input type="radio" name="schoolName2" value="Harvard"> Harvard<br>
-      <input type="radio" name="schoolName2" value="Pennsylvania"> Pennsylvania<br>
-      <input type="radio" name="schoolName2" value="Princeton"> Princeton<br>
-      <input type="radio" name="schoolName2" value="Yale"> Yale<br>
-    </form>
+    <div id="visualization" class="divContainer">
+      <div id="div1" class="divSplit1">
+        <form id="buttons1" action="" class="buttons">
+          <input type="radio" name="schoolName1" value="Brown"> Brown<br>
+          <input type="radio" name="schoolName1" value="Columbia"> Columbia<br>
+          <input type="radio" name="schoolName1" value="Cornell" checked> Cornell<br>
+          <input type="radio" name="schoolName1" value="Dartmouth"> Dartmouth<br>
+          <input type="radio" name="schoolName1" value="Harvard"> Harvard<br>
+          <input type="radio" name="schoolName1" value="Pennsylvania"> Pennsylvania<br>
+          <input type="radio" name="schoolName1" value="Princeton"> Princeton<br>
+          <input type="radio" name="schoolName1" value="Yale"> Yale<br>
+        </form>
+        <svg id="donut1" class="donut"></svg>
+        <input id ="slider1" type="range" min="1996" max="2016" value="2005" class="slider">
+      </div>
+
+      <div id="div2" class="divSplit2">
+        <form id="buttons2" action="" class="buttons">
+          <input type="radio" name="schoolName2" value="Brown"> Brown<br>
+          <input type="radio" name="schoolName2" value="Columbia"> Columbia<br>
+          <input type="radio" name="schoolName2" value="Cornell" checked> Cornell<br>
+          <input type="radio" name="schoolName2" value="Dartmouth"> Dartmouth<br>
+          <input type="radio" name="schoolName2" value="Harvard"> Harvard<br>
+          <input type="radio" name="schoolName2" value="Pennsylvania"> Pennsylvania<br>
+          <input type="radio" name="schoolName2" value="Princeton"> Princeton<br>
+          <input type="radio" name="schoolName2" value="Yale"> Yale<br>
+        </form>
+        <svg id="donut2" class="donut"></svg>
+        <input id ="slider2" type="range" min="1996" max="2016" value="2005" class="slider">
+      </div>
+    </div>
+
     <script>
       var data;
       var year;
@@ -131,17 +187,12 @@
             render()
           });
 
-        winHeight = window.innerHeight-10;
-        winWidth = window.innerWidth-10;
-        var side = Math.min(winHeight,winWidth);
-
         var color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // draw and append the container
         // play with width/height percentages to make room for buttons/sliders/selectors
         // **must be percentages to work with viewBox;
-        var svg = d3.select("body").append("svg")
-          .attr("id","graph"+num)
+        var svg = d3.select("#donut"+num)
           .attr("width", "50%")   // each svg takes up 50% of the window
           .attr("height", "75%")  // each svg takes up 75% of the window
           .attr("viewBox", "0 0 "+side+" "+side);   // allows for relative resizing
