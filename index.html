@@ -60,10 +60,6 @@
   </style>
 
   <body>
-    <!--<div>
-      Number of datapoints:
-      <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
-    </div>-->
     <div id="visualization" class="divContainer">
       <div id="div1" class="divSplit1">
         <form id="buttons1" action="" class="buttons">
@@ -101,7 +97,7 @@
       var year;
       var race;
       var gender;
-      var returnedData; //for makeDataSchool
+      var returnedData;
 
       d3.csv("data/RaceByYear.csv", parseRow, callback);
 
@@ -155,14 +151,6 @@
       function translate (x,y) { return "translate(" + x + "," + y + ")"; };
       function rotate (a,x,y) { return "rotate(" + a + " " + x + "," + y + ")"};
 
-
-      // to access a particular school based on a particular year and race use:
-      // Object.values(year[0])[1][13].Cornell
-      // year[0] - the actual year
-      // [1] - the value list
-      // [13] - the 14th object ("race")
-      // .Cornell pulls value for particular school
-
       //don't think we need school_list or school_maps anymore
       var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell",
                         "Harvard", "Princeton", "UPenn", "Yale"]
@@ -209,10 +197,6 @@
           .attr("viewBox", "0 0 "+side+" "+side)   // allows for relative resizing
           .append("g")
           .attr("id", "labelName" + num);
-
-       /* svg.append("g")
-        .attr("class", "lines")*/
-
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
         console.log(oRadius)
@@ -253,59 +237,22 @@
             .attr("fill", function(d,i){ return color(i); })
             .each(function(d,i) {
               this._current = d;
+        })
 
-              // add a hidden arc for each section, extended, for labelling
-              // unsure if there's a better way, right now it looks like every section
-              //   adds hidden arcs for every section--so there's section*section arcs?
-              var newArc = d3.arc()
-                .outerRadius(oRadius)
-                .innerRadius(iRadius)
-                .startAngle(arc.startAngle()(d))
-                .endAngle(arc.endAngle()(d)+50);
-
-              // //Create a new invisible arc that the text can flow along
-              // pathG.append("path")
-              //   .attr("class", "hiddenArcs")
-              //   .attr("id", "arc"+i)
-              //   .attr("d", newArc)
-              //   .style("fill", "none");
-            })
-        console.log(pie(donut_data))
-        console.log("#labelName" + num)
         var text = g.selectAll("text")
         .data(pie(donut_data), function(d){console.log(racedic.get(d.index));return racedic.get(d.index); });
-        console.log(text);
 
         text.enter()
         .append("text")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
           var pos = arc.centroid(d);
-          console.log("pos is")
-          console.log(pos);
-          //pos[0] = 400 * (midAngle(d) < Math.PI ? 1 : -1);
           return "translate(" + pos + ")";
         })
         .style("text-anchor", "middle")
         .text(function(d) {
             return (racedic.get(d.index));
         });
-
-        // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
-        // Add labels
-        /*pathG.append("text")
-            .attr("class","piechartLabels")
-            // .attr("x", 25)
-            // .attr("startOffset","50%")
-            // .style("text-anchor","middle")
-            .attr("dy", -13)
-          .merge(pathG)
-            .append("textPath")
-            .attr("xlink:href",function(d,i){return "#arc"+i;})
-            .text(function(d) { return racedic.get(d.index); })
-            // .on("mouseover", function (d) {
-            //     // this.attr('visibility', 'visible');
-            // })*/
 
         pathG.append("image")
           .attr("width","50%")
@@ -348,9 +295,23 @@
             .merge(image)
               .attr("xlink:href", "images/"+schoolInput+".png");
 
+        g.selectAll("text").remove();
+        var text = g.selectAll("text")
+        .data(pie(donut_data), function(d){return racedic.get(d.index); });
+
+        text.enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .attr("transform", function(d) {
+          var pos = arc.centroid(d);
+          return "translate(" + pos + ")";
+        })
+        .style("text-anchor", "middle")
+        .text(function(d) {
+            return (racedic.get(d.index));
+        });
+
         }
-        // render();
-        //setInterval(render,2000);
 
         //the circle should be the diversity distribution from the school
         //selected, during the selected year
