@@ -12,6 +12,7 @@
       position:relative;
       width:100%;
       height:50%;
+      top:20%;
     }
     .divSplit1 {
       position:absolute;
@@ -98,7 +99,7 @@
       var gender;
       var returnedData; //for makeDataSchool
 
-      d3.csv("/data/RaceByYear.csv", parseRow, callback);
+      d3.csv("data/RaceByYear.csv", parseRow, callback);
 
       function parseRow(row) {
         var newRow = {};
@@ -271,10 +272,18 @@
             //     // this.attr('visibility', 'visible');
             // })
 
+        pathG.append("image")
+          .attr("width","50%")
+          .attr("height","50%")
+          .attr("x","-25%")
+          .attr("y","-25%")
+          .attr("xlink:href", "images/Cornell.png");
+
         function render() {
+
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
-          donut_data= makeDataSchool(school_list)
+          donut_data = makeDataSchool(school_list);
           // add transition to new path
           g.datum(donut_data).selectAll("path")
             .data(pie)
@@ -288,10 +297,22 @@
             .attr("fill", function(d,i){ return color(i); })
             .attr("d", arc)
             .each(function(d){ this._current = d; })
-
           // remove data not being used
           g.datum(donut_data).selectAll("path")
             .data(pie).exit().remove();
+
+          svg.selectAll("image").remove();
+          var image = svg.selectAll("image")
+            .data([schoolInput]);
+          image.enter()
+            .append("image")
+              .attr("width","50%")
+              .attr("height","50%")
+              .attr("x","25%")
+              .attr("y","25%")
+            .merge(image)
+              .attr("xlink:href", "images/"+schoolInput+".png");
+
         }
         // render();
         //setInterval(render,2000);
