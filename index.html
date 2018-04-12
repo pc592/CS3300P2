@@ -55,7 +55,7 @@
     .piechartLabels {
       font-family: Arial;
       color: black;
-      font-size: 4vh;
+      font-size: 3vh;
     }
     .piechartArcs:hover { opacity:0.9; }
 
@@ -246,6 +246,7 @@
 
         text.enter()
         .append("text")
+        .attr("class","piechartLabels")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
           var pos = arc.centroid(d);
