@@ -18,8 +18,8 @@
       Number of datapoints:
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
     </div>-->
-    <!-- <input id ="slider1" type="range" min="1996" max="2016" value = "2005"> -->
-    <!-- <input id ="slider2" type="range" min="1996" max="2016" value = "2005"> -->
+    <input id ="slider1" type="range" min="1996" max="2016" value = "2005">
+    <input id ="slider2" type="range" min="1996" max="2016" value = "2005">
     <script>
       var data;
       var year;
@@ -80,7 +80,7 @@
       function rotate (a,x,y) { return "rotate(" + a + " " + x + "," + y + ")"};
 
 
-      // to access a particular school based on a particular year and race use: 
+      // to access a particular school based on a particular year and race use:
       // Object.values(year[0])[1][13].Cornell
       // year[0] - the actual year
       // [1] - the value list
@@ -99,15 +99,16 @@
         var racedic = d3.map();
 
         // year from slider
-        var yearInput;
+        var yearInput= 0;
 
         //not implemented until labels are figured out
         var slideInput = d3.select("#slider"+num)
           .on("input", function(){
             console.log(this.value);
             //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
-            yearInput = this - 1996;
+            yearInput = this.value - 1996;
             //perform update
+            render()
           });
 
         winHeight = window.innerHeight-10;
@@ -170,11 +171,11 @@
                 .endAngle(arc.endAngle()(d)+50);
 
               //Create a new invisible arc that the text can flow along
-              pathG.append("path")
+              /*pathG.append("path")
                 .attr("class", "hiddenArcs")
                 .attr("id", "arc"+i)
                 .attr("d", newArc)
-                .style("fill", "none");
+                .style("fill", "none");*/
             })
 
         // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
@@ -193,10 +194,10 @@
             //     // this.attr('visibility', 'visible');
             // })
 
-        function render(){
+        function render() {
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
-          // donut_data= makeDataSchool(school_list)
+          donut_data= makeDataSchool(school_list)
           // add transition to new path
           g.datum(donut_data).selectAll("path")
             .data(pie)
@@ -229,14 +230,15 @@
         //selected, during the selected year
         function makeDataSchool(school_list){
           //will use yearInput in place of the 0 in all of the following
-          var races= Object.values(year[0])[1];
+          console.log(yearInput);
+          var races= Object.values(year[yearInput])[1];
           returnedData = d3.range(races.length).map(function(item) {
             // console.log("#of race: " + Object.values(year[0])[1][item].Cornell);
-            var rac = Object.values(year[0])[1][item];
+            var rac = Object.values(year[yearInput])[1][item];
             var abvName = rac.RaceName;
             racedic.set(item, abvName);
             //console.log(racedic);
-            return Object.values(year[0])[1][item].Cornell;
+            return Object.values(year[yearInput])[1][item].Cornell;
           });
           return returnedData;
         };
