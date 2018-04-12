@@ -175,7 +175,7 @@
         var winHeight = window.innerHeight-10;
         var winWidth = window.innerWidth-10;
         var side = Math.min(winHeight,winWidth);
-        
+
         //for makeDataSchool
         //Will store race names as the value, index number as key
         //Indexes will match the keys of the data created in makeDataSchool
@@ -200,7 +200,7 @@
             render()
           });
 
-        var color = d3.scaleOrdinal(d3.schemeCategory20);
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // draw and append the container
         // play with width/height percentages to make room for buttons/sliders/selectors
@@ -208,15 +208,26 @@
         var svg = d3.select("#donut"+num)
           .attr("width", "75%")   // each svg takes up 50% of the window
           .attr("height", "75%")  // each svg takes up 75% of the window
-          .attr("viewBox", "0 0 "+side+" "+side);   // allows for relative resizing
+          .attr("viewBox", "0 0 "+side+" "+side)   // allows for relative resizing
+          .append("g")
+          .attr("id", "labelName" + num);
+
+       /* svg.append("g")
+        .attr("class", "lines")*/
 
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
+        console.log(oRadius)
         var iRadius = side / 2.75;
+        console.log(iRadius)
 
         // construct arc generator
         var arc = d3.arc()
           .outerRadius(oRadius)
+          .innerRadius(iRadius);
+
+        var labelArc = d3.arc()
+          .outerRadius(oRadius*1.2)
           .innerRadius(iRadius);
 
         // creates the pie chart container
@@ -261,10 +272,30 @@
               //   .attr("d", newArc)
               //   .style("fill", "none");
             })
+        console.log(pie(donut_data))
+        console.log("#labelName" + num)
+        var text = g.selectAll("text")
+        .data(pie(donut_data), function(d){console.log(racedic.get(d.index));return racedic.get(d.index); });
+        console.log(text);
+
+        text.enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .attr("transform", function(d) {
+          var pos = arc.centroid(d);
+          console.log("pos is")
+          console.log(pos);
+          //pos[0] = 400 * (midAngle(d) < Math.PI ? 1 : -1);
+          return "translate(" + pos + ")";
+        })
+        .style("text-anchor", "middle")
+        .text(function(d) {
+            return (racedic.get(d.index));
+        });
 
         // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
         // Add labels
-        pathG.append("text")
+        /*pathG.append("text")
             .attr("class","piechartLabels")
             // .attr("x", 25)
             // .attr("startOffset","50%")
@@ -276,7 +307,7 @@
             .text(function(d) { return racedic.get(d.index); })
             // .on("mouseover", function (d) {
             //     // this.attr('visibility', 'visible');
-            // })
+            // })*/
 
         pathG.append("image")
           .attr("width","50%")
