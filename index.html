@@ -153,9 +153,10 @@
           .attr("id","graph"+num)
           .attr("width", "50%")   // each svg takes up 50% of the window
           .attr("height", "75%")  // each svg takes up 75% of the window
-          .attr("viewBox", "0 0 "+side+" "+side);   // allows for relative resizing
+          .attr("viewBox", "0 0 "+side+" "+side)   // allows for relative resizing
+          .append("g")
 
-        var g_text= svg.append("g")
+        svg.append("g")
         .attr("class", "labelName");
 
         svg.append("g")
@@ -163,11 +164,17 @@
 
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
+        console.log(oRadius)
         var iRadius = side / 2.75;
+        console.log(iRadius)
 
         // construct arc generator
         var arc = d3.arc()
           .outerRadius(oRadius)
+          .innerRadius(iRadius);
+
+        var labelArc = d3.arc()
+          .outerRadius(oRadius*1.2)
           .innerRadius(iRadius);
 
         // creates the pie chart container
@@ -191,7 +198,7 @@
         // create/update pie chart
         var pathG = paths.enter().append("g");
         pathG.append("path")
-            .attr("class","piechartArcs labelName")
+            .attr("class","piechartArcs")
           .merge(pathG)
             .attr("d", arc)
             .attr("fill", function(d,i){ return color(i); })
@@ -212,56 +219,29 @@
                 .attr("d", newArc)
                 .style("fill", "none");*/
             })
-       // console.log(pie(data));
-        //var t= svg.selectAll(".labelName").append("text")
-
-        var text_test= svg.select(".labelName").selectAll("text");
-        console.log("test text is");
-        console.log(text_test);
+        console.log(pie(donut_data))
         var text = svg.select(".labelName").selectAll("text")
-        .data(pie(data), function(d){return d.data.RaceName; });
+        .data(pie(donut_data), function(d){console.log(racedic.get(d.index));return racedic.get(d.index); });
         console.log(text);
-
-        text.enter()
-        .append("text")
-        .attr("dy", ".35em")
-        .text(function(d) {
-            return (d.data.RaceName);
-        });
 
         function midAngle(d){
         return d.startAngle + (d.endAngle - d.startAngle)/2;
         }
-        console.log(text);
-        text
-        .transition().duration(1000)
-        .attrTween("transform", function(d) {
-            this._current = this._current || d;
-            var interpolate = d3.interpolate(this._current, d);
-            this._current = interpolate(0);
-            return function(t) {
-                console.log("here");
-                var d2 = interpolate(t);
-                var pos = outerArc.centroid(d2);
-                pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
-                return "translate("+ pos +")";
-            };
+
+        text.enter()
+        .append("text")
+        .attr("dy", ".35em")
+        .attr("transform", function(d) {
+          var pos = labelArc.centroid(d);
+          pos[0] = 400 * (midAngle(d) < Math.PI ? 1 : -1);
+          return "translate(" + pos + ")";
         })
-        .styleTween("text-anchor", function(d){
-            this._current = this._current || d;
-            var interpolate = d3.interpolate(this._current, d);
-            this._current = interpolate(0);
-            return function(t) {
-                console.log("here");
-                var d2 = interpolate(t);
-                return midAngle(d2) < Math.PI ? "start":"end";
-            };
+        .style("text-anchor", function(d) {
+          return midAngle(d) < Math.PI ? "start" : "end";
         })
         .text(function(d) {
-            return d.data.RaceName;
+            return (racedic.get(d.index));
         });
-    text.exit()
-        .remove();
 
         // https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
         // Add labels
