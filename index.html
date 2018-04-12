@@ -302,19 +302,17 @@
         var paths = g.datum(donut_data).selectAll("path")
           .data(pie(donut_data))
 
-        // remove data if unneeded
-        paths.exit().remove();
-
-        // create/update pie chart
+        // create/update pie chart groups
         var pathG = paths.enter().append("g");
+
+        // remove data if unneeded
+        pathG.exit().remove();
+
         pathG.append("path")
             .attr("class","piechartArcs labelArc")
           .merge(pathG)
             .attr("d", arc)
             .attr("fill", function(d,i){ return color(i); })
-            .each(function(d,i) {
-              this._current = d;
-            })
             //I commented the mouseenter off when trying to figure out how to make click work
             .on("mouseenter", function(d) {
               d3.select(this.parentNode).select('text')
@@ -337,20 +335,22 @@
               d3.select(this)
                .attr("d", arcOver)
                .attr("stroke-width",6);
-            });
+            })
+            .each(function(d,i) {
+              this._current = d;
+            })
             
-        pathG
-        .append("text")
-        .attr("class","piechartLabels")
-        .attr("dy", ".35em")
-        .attr("transform", function(d) {
-          var pos = arc.centroid(d);
-          return "translate(" + pos + ")";
-        })
-        .style("text-anchor", "middle")
-        .text(function(d) {
-            return race_shortened(racedic.get(d.index));
-        });
+        pathG.append("text")
+          .attr("class","piechartLabels")
+          .attr("dy", ".35em")
+          .attr("transform", function(d) {
+            var pos = arc.centroid(d);
+            return "translate(" + pos + ")";
+          })
+          .style("text-anchor", "middle")
+          .text(function(d) {
+              return race_shortened(racedic.get(d.index));
+          });
 
         function race_shortened(race) {
           var split_race= race.split(new RegExp("[ ]{1,}"))
@@ -372,20 +372,49 @@
           donut_data = makeDataSchool(school_list);
           // add transition to new path
           g.datum(donut_data).selectAll("path")
-            .data(pie)
+            .data(pie(donut_data))
             .transition().duration(1000)
-            .attrTween("d", arcTween)
-          // add any new paths
-          g.datum(donut_data).selectAll("path")
-            .data(pie)
-            .enter().append("path")
-            .attr("class","piechart labelArc")
-            .attr("fill", function(d,i){ return color(i); })
-            .attr("d", arc)
-            .each(function(d){ this._current = d; })
-          // remove data not being used
-          g.datum(donut_data).selectAll("path")
-            .data(pie).exit().remove();
+            .attrTween("d", arcTween);
+
+          var paths = g.datum(donut_data).selectAll("path")
+            .data(pie(donut_data));
+
+          var pathG = paths.enter().append("g");
+
+          // remove data if unneeded
+          pathG.exit().remove();
+
+          pathG.append("path")
+              .attr("class","piechartArcs labelArc")
+            .merge(pathG)
+              .attr("d", arc)
+              .attr("fill", function(d,i){ return color(i); })
+              //I commented the mouseenter off when trying to figure out how to make click work
+              .on("mouseenter", function(d) {
+                d3.select(this.parentNode).select('text')
+                  .style("font-size", "10vh")
+                d3.select(this)
+                   .attr("d", arcOver)
+                   .attr("stroke-width",6);
+              })
+              .on("mouseleave", function(d) {
+                  d3.select(this.parentNode).select('text')
+                    .style("font-size", "4vh")
+                  d3.select(this).transition()
+                     .attr("d", arc)
+                     .attr("stroke","none");
+              })
+              .on("click", function(d){
+                this.off("mouseleave mouseenter");
+                d3.select(this.parentNode).select('text')
+                  .style("font-size", "10vh")
+                d3.select(this)
+                 .attr("d", arcOver)
+                 .attr("stroke-width",6);
+              })
+              .each(function(d,i) {
+                this._current = d;
+              })
 
           svg.selectAll("image").remove();
           var image = svg.selectAll("image")
@@ -399,22 +428,21 @@
             .merge(image)
               .attr("xlink:href", "images/"+schoolInput+".png");
 
-        g.selectAll("text").remove();
-        var text = g.selectAll("text")
-        .data(pie(donut_data), function(d){return racedic.get(d.index); });
+          g.selectAll("text").remove();
+          var text = g.selectAll("text")
+            .data(pie(donut_data), function(d){return racedic.get(d.index); });
 
-        text.enter()
-        .append("text")
-        .attr("class","piechartLabels")
-        .attr("dy", ".35em")
-        .attr("transform", function(d) {
-          var pos = arc.centroid(d);
-          return "translate(" + pos + ")";
-        })
-        .style("text-anchor", "middle")
-        .text(function(d) {
-            return race_shortened(racedic.get(d.index));
-        });
+          text.enter().append("text")
+            .attr("class","piechartLabels")
+            .attr("dy", ".35em")
+            .attr("transform", function(d) {
+              var pos = arc.centroid(d);
+              return "translate(" + pos + ")";
+            })
+            .style("text-anchor", "middle")
+            .text(function(d) {
+                return race_shortened(racedic.get(d.index));
+            });
 
         }
 
