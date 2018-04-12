@@ -197,7 +197,7 @@
             render()
           });
 
-        var color = d3.scaleOrdinal(d3.schemeCategory20);
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // draw and append the container
         // play with width/height percentages to make room for buttons/sliders/selectors
@@ -206,11 +206,8 @@
           .attr("width", "75%")   // each svg takes up 50% of the window
           .attr("height", "75%")  // each svg takes up 75% of the window
           .attr("viewBox", "0 0 "+side+" "+side)   // allows for relative resizing
-
-        //svg.append("g").attr("id", "labelName")
-
-        svg.append("g")
-        .attr("class", "labelName");
+          .append("g")
+          .attr("id", "labelName" + num);
 
        /* svg.append("g")
         .attr("class", "lines")*/
@@ -273,19 +270,18 @@
               //   .style("fill", "none");
             })
         console.log(pie(donut_data))
-        var text = svg.select("#labelName").selectAll("text")
+        console.log("#labelName" + num)
+        var text = g.selectAll("text")
         .data(pie(donut_data), function(d){console.log(racedic.get(d.index));return racedic.get(d.index); });
         console.log(text);
-
-        function midAngle(d){
-        return d.startAngle + (d.endAngle - d.startAngle)/2;
-        }
 
         text.enter()
         .append("text")
         .attr("dy", ".35em")
         .attr("transform", function(d) {
-          var pos = labelArc.centroid(d);
+          var pos = arc.centroid(d);
+          console.log("pos is")
+          console.log(pos);
           //pos[0] = 400 * (midAngle(d) < Math.PI ? 1 : -1);
           return "translate(" + pos + ")";
         })
