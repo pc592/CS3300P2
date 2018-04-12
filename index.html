@@ -55,11 +55,6 @@
   </style>
 
   <body>
-    <script>
-        var winHeight = window.innerHeight-10;
-        var winWidth = window.innerWidth-10;
-        var side = Math.min(winHeight,winWidth);
-    </script>
     <!--<div>
       Number of datapoints:
       <input id="datacount" onkeyup="render()" value="15" name="datapoints"></input>
@@ -169,6 +164,11 @@
       // var school_maps = [];
 
       function createVisualization(num) {
+
+        var winHeight = window.innerHeight-10;
+        var winWidth = window.innerWidth-10;
+        var side = Math.min(winHeight,winWidth);
+        
         //for makeDataSchool
         //Will store race names as the value, index number as key
         //Indexes will match the keys of the data created in makeDataSchool
@@ -177,13 +177,22 @@
         // year from slider
         var yearInput= 0;
 
-        //not implemented until labels are figured out
+        // school name from radio buttons
+        var schoolInput = "Cornell";
+
         var slideInput = d3.select("#slider"+num)
           .on("input", function(){
             console.log(this.value);
             //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
             yearInput = this.value - 1996;
             //perform update
+            render()
+          });
+
+        var radioInput = d3.selectAll("#schoolName" + num)
+          .on("change", function(){
+            console.log(this.value);
+            schoolInput = this.value;
             render()
           });
 
@@ -309,7 +318,7 @@
             var abvName = rac.RaceName;
             racedic.set(item, abvName);
             //console.log(racedic);
-            return Object.values(year[yearInput])[1][item].Cornell;
+            return Object.values(year[yearInput])[1][item][schoolInput];
           });
           return returnedData;
         };
