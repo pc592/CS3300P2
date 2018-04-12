@@ -146,7 +146,7 @@
           .attr("height", "75%")  // each svg takes up 75% of the window
           .attr("viewBox", "0 0 "+side+" "+side);   // allows for relative resizing
 
-        svg.append("g")
+        var g_text= svg.append("g")
         .attr("class", "labelName");
 
         svg.append("g")
@@ -203,22 +203,27 @@
                 .attr("d", newArc)
                 .style("fill", "none");*/
             })
+       // console.log(pie(data));
+        //var t= svg.selectAll(".labelName").append("text")
 
+        var text_test= svg.select(".labelName").selectAll("text");
+        console.log("test text is");
+        console.log(text_test);
         var text = svg.select(".labelName").selectAll("text")
-        .data(pie(data), function(d){console.log("race is " + racedic.get(d.index)); return racedic.get(d.index); });
+        .data(pie(data), function(d){return d.data.RaceName; });
         console.log(text);
 
         text.enter()
         .append("text")
         .attr("dy", ".35em")
         .text(function(d) {
-            return (racedic.get(d.index));
+            return (d.data.RaceName);
         });
 
         function midAngle(d){
         return d.startAngle + (d.endAngle - d.startAngle)/2;
         }
-
+        console.log(text);
         text
         .transition().duration(1000)
         .attrTween("transform", function(d) {
@@ -226,6 +231,7 @@
             var interpolate = d3.interpolate(this._current, d);
             this._current = interpolate(0);
             return function(t) {
+                console.log("here");
                 var d2 = interpolate(t);
                 var pos = outerArc.centroid(d2);
                 pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
@@ -237,12 +243,13 @@
             var interpolate = d3.interpolate(this._current, d);
             this._current = interpolate(0);
             return function(t) {
+                console.log("here");
                 var d2 = interpolate(t);
                 return midAngle(d2) < Math.PI ? "start":"end";
             };
         })
         .text(function(d) {
-            return (racedic.get(d.index));
+            return d.data.RaceName;
         });
     text.exit()
         .remove();
