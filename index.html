@@ -168,9 +168,6 @@
         newRow["Gender"] = row["Gender"]
         newRow["Year"] = Number(row["Year"])
 
-        // var splitStr;
-        // if (newRow["Gender"] == "Male") { splitStr = ' men';
-        // } else { splitStr = ' women'; }
         var splitStr = " ("
         newRow["RaceName"] = row["Race"].split(splitStr)[0];
 
@@ -314,20 +311,30 @@
             .each(function(d,i) {
               this._current = d;
             })
+            //I commented the mouseenter off when trying to figure out how to make click work
             .on("mouseenter", function(d) {
-            d3.select(this.parentNode).select('text')
-              .style("font-size", "10vh")
-            d3.select(this)
-               .attr("d", arcOver)
-               .attr("stroke-width",6);
+              d3.select(this.parentNode).select('text')
+                .style("font-size", "10vh")
+              d3.select(this)
+                 .attr("d", arcOver)
+                 .attr("stroke-width",6);
             })
             .on("mouseleave", function(d) {
-            d3.select(this.parentNode).select('text')
-              .style("font-size", "4vh")
-            d3.select(this).transition()
-               .attr("d", arc)
-               .attr("stroke","none");
-            });;
+                d3.select(this.parentNode).select('text')
+                  .style("font-size", "4vh")
+                d3.select(this).transition()
+                   .attr("d", arc)
+                   .attr("stroke","none");
+            })
+            .on("click", function(d){
+              this.off("mouseleave mouseenter");
+              d3.select(this.parentNode).select('text')
+                .style("font-size", "10vh")
+              d3.select(this)
+               .attr("d", arcOver)
+               .attr("stroke-width",6);
+            });
+            
         pathG
         .append("text")
         .attr("class","piechartLabels")
@@ -353,22 +360,6 @@
           }
           return shortened
         }
-
-        /*var text = g.selectAll("text")
-        .data(pie(donut_data), function(d){console.log(race_shortened(racedic.get(d.index)));return race_shortened(racedic.get(d.index)); });
-
-        text.enter()
-        .append("text")
-        .attr("class","piechartLabels labelArc")
-        .attr("dy", ".35em")
-        .attr("transform", function(d) {
-          var pos = arc.centroid(d);
-          return "translate(" + pos + ")";
-        })
-        .style("text-anchor", "middle")
-        .text(function(d) {
-            return race_shortened(racedic.get(d.index));
-        });*/
 
         function render() {
 
