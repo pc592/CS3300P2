@@ -26,13 +26,16 @@
       height:100%;
       left:50%;
     }
+    .but {
+      border-radius: 0;
+    }
     .buttons {
       position:absolute;
       top:25%;
-      left:10%;
+      left:5%;
       font-family: Arial;
       color: black;
-      font-size: 1.75vh;
+      font-size: 2vh;
     }
     .donut {
       position:absolute;
@@ -49,7 +52,7 @@
     .piechartLabels {
       font-family: Arial;
       color: black;
-      font-size: 2vh;
+      font-size: 4vh;
     }
     .piechartArcs:hover { opacity:0.9; }
 
@@ -63,7 +66,7 @@
     <div id="visualization" class="divContainer">
       <div id="div1" class="divSplit1">
         <form id="buttons1" action="" class="buttons">
-          <input type="radio" id="schoolName1" name="schoolInputValue1" value="Brown"> Brown<br>
+          <input type="radio" id="schoolName1" name="schoolInputValue1" value="Brown" class="but"> Brown<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Columbia"> Columbia<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Cornell" checked> Cornell<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Dartmouth"> Dartmouth<br>
@@ -194,7 +197,7 @@
             render()
           });
 
-        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
 
         // draw and append the container
         // play with width/height percentages to make room for buttons/sliders/selectors
@@ -262,12 +265,12 @@
                 .startAngle(arc.startAngle()(d))
                 .endAngle(arc.endAngle()(d)+50);
 
-              //Create a new invisible arc that the text can flow along
-              /*pathG.append("path")
-                .attr("class", "hiddenArcs")
-                .attr("id", "arc"+i)
-                .attr("d", newArc)
-                .style("fill", "none");*/
+              // //Create a new invisible arc that the text can flow along
+              // pathG.append("path")
+              //   .attr("class", "hiddenArcs")
+              //   .attr("id", "arc"+i)
+              //   .attr("d", newArc)
+              //   .style("fill", "none");
             })
         console.log(pie(donut_data))
         var text = svg.select("#labelName").selectAll("text")
