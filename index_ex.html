@@ -220,6 +220,7 @@ function change(data) {
 
     /* ------- TEXT LABELS -------*/
     console.log(pie(data));
+    console.log(data)
     var text_test= svg.select(".labelName").selectAll("text");
     console.log("text test is " + text_test);
     var text = svg.select(".labelName").selectAll("text")
@@ -244,6 +245,7 @@ function change(data) {
             this._current = interpolate(0);
             return function(t) {
                 var d2 = interpolate(t);
+                console.log(d2);
                 var pos = outerArc.centroid(d2);
                 pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
                 return "translate("+ pos +")";
