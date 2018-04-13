@@ -84,7 +84,12 @@
       color: black;
       font-size: 1.5vh;     
     }
-
+    .image:hover {
+      x:20%;
+      y:20%;
+      width:60%;
+      height:60%;
+    }
 
     /*.labelArc {
       font-size:3vh;
@@ -337,7 +342,8 @@
             .data(pie(donut_data));
 
           // create/update pie chart groups
-          var pathG = paths.enter().append("g");
+          var pathG = paths.enter().append("g")
+            .attr("id",function(d,i){return "pathG"+i});
 
           pathG.append("path")
               .attr("class","piechart labelArc")
@@ -345,6 +351,7 @@
               .attr("fill", function(d,i){ return color(i); })
               .attr("d", arc)
               .on("mouseenter", function(d) {
+                // console.log(this.parentNode)
                 d3.select(this.parentNode).select('text')
                   .style("font-size", "10vh")
                 d3.select(this)
@@ -372,6 +379,25 @@
                 // console.log(changeStat.value)
               })
               .each(function(d){ this._current = d; })
+
+
+          pathG.selectAll("text").remove();
+          var text = pathG.selectAll("text")
+            .data(pie(donut_data), function(d){return racedic.get(d.index); });
+
+          text.enter()
+            .append("text")
+            .attr("class","piechartLabels")
+            .attr("dy", ".35em")
+            .attr("transform", function(d) {
+              var pos = arc.centroid(d);
+              return "translate(" + pos + ")";
+            })
+            .style("text-anchor", "middle")
+            .text(function(d) {
+                return race_shortened(racedic.get(d.index));
+            });
+
           // remove data not being used
           paths.exit().remove();
 
@@ -380,30 +406,13 @@
             .data([schoolInput]);
           image.enter()
             .append("image")
+              .attr("class","image")
               .attr("width","50%")
               .attr("height","50%")
               .attr("x","25%")
               .attr("y","25%")
             .merge(image)
               .attr("xlink:href", "images/"+schoolInput+".png");
-
-          g.selectAll("text").remove();
-          var text = g.selectAll("text")
-          .data(pie(donut_data), function(d){return racedic.get(d.index); });
-
-          text.enter()
-          .append("text")
-          .attr("class","piechartLabels")
-          .attr("dy", ".35em")
-          .attr("transform", function(d) {
-            var pos = arc.centroid(d);
-            return "translate(" + pos + ")";
-          })
-          .style("text-anchor", "middle")
-          .text(function(d) {
-              return race_shortened(racedic.get(d.index));
-          });
-
         }
 
       }
