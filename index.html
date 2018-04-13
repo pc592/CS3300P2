@@ -129,7 +129,7 @@
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut1" class="donut"></svg>
+        <svg id="donut1" class="donut"><p id="total_stats1"></p></svg>
         <input id ="slider1" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin1" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur1" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -147,7 +147,7 @@
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut2" class="donut"></svg>
+        <svg id="donut2" class="donut"><p id="total_stats2"></p></svg>
         <input id ="slider2" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin2" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur2" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -230,6 +230,9 @@
         // year from slider
         var yearInput= 0;
 
+        var totalStats=0;
+        var partialStats=0;
+
         //TODO: 2008 and 2009 have double the number of races..!
 
         var slideInput = d3.select("#slider"+num)
@@ -265,9 +268,9 @@
           .attr("id", "labelName" + num);
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
-        console.log(oRadius)
+        //console.log(oRadius)
         var iRadius = side / 2.75;
-        console.log(iRadius)
+        //console.log(iRadius)
 
         // construct arc generator
         var arc = d3.arc()
@@ -408,12 +411,17 @@
                      .attr("stroke","none");
               })
               .on("click", function(d){
-                this.off("mouseleave mouseenter");
                 d3.select(this.parentNode).select('text')
                   .style("font-size", "10vh")
                 d3.select(this)
                  .attr("d", arcOver)
                  .attr("stroke-width",6);
+                // console.log("I'm at the partialStat")
+                // console.log(totalStats)
+                // console.log(donut_data[d.index]);
+                partialStats += donut_data[d.index];
+                var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
+                // console.log(changeStat.value)
               })
               .each(function(d){ this._current = d; })
           // remove data not being used
@@ -487,14 +495,17 @@
         //the circle should be the diversity distribution from the school
         //selected, during the selected year
         function makeDataSchool(school_list){
+          totalStats = 0;
           //will use yearInput in place of the 0 in all of the following
           var races= Object.values(year[yearInput])[1];
           returnedData = d3.range(races.length).map(function(item) {
             var rac = Object.values(year[yearInput])[1][item];
             var abvName = rac.RaceName;
             racedic.set(item, abvName);
+            totalStats += Object.values(year[yearInput])[1][item][schoolInput];
             return Object.values(year[yearInput])[1][item][schoolInput];
           });
+          d3.select("#total_stats"+num).text("Total Number of Admitted students " + totalStats);
           return returnedData;
         };
 
