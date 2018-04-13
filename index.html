@@ -278,6 +278,7 @@
         var radioInput = d3.selectAll("#schoolName" + num)
           .on("change", function(){
             schoolInput = this.value;
+            d3.select("#current_demograhic" + num).text("Hovered Demographic: ")
             render()
           });
 
