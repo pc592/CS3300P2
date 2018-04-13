@@ -355,23 +355,21 @@
             .merge(pathG)
               .attr("fill", function(d,i){ return color(i); })
               .attr("d", arc)
-              .on("mouseenter", function(d) {
+              .on("mouseover", function(d) {
+                // console.log(d3.select(this)._groups[0][0].nextSibling)
+                // d3.select(this)._groups[0][0].nextSibling.classList.remove("pieChartLabels")
+                // d3.select(this)._groups[0][0].nextSibling.classList.add("pieChartLabelsSel")
                 this.parentNode.children[1].classList.remove("pieChartLabels")
                 this.parentNode.children[1].classList.add("pieChartLabelsSel")
-                // d3.select(this.parentNode).select('text')
-                //   .style("font-size", "8vh")
-                // d3.select(this).lower()
                 d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
                 d3.select(this)
                    .attr("d", arcOver)
-                   // .attr("stroke-width",6);
+                   .attr("stroke-width",6);
               })
-              .on("mouseleave", function(d) {
+              .on("mouseout", function(d) {
                 if(indexesSelected.indexOf(d.index) == -1){
                   this.parentNode.children[1].classList.add("pieChartLabels")
                   this.parentNode.children[1].classList.remove("pieChartLabelsSel")
-                  // d3.select(this.parentNode).select('text')
-                  //   .style("font-size", "5vh")
                   d3.select(this).transition()
                      .attr("d", arc)
                      // .attr("stroke","none");
@@ -380,8 +378,6 @@
               .on("click", function(d){
                 this.parentNode.children[1].classList.remove("pieChartLabels")
                 this.parentNode.children[1].classList.add("pieChartLabelsSel")
-                // d3.select(this.parentNode).select('text')
-                //   .style("font-size", "8vh")
                 d3.select(this)
                  .attr("d", arcOver)
                  // .attr("stroke-width",6);
@@ -393,6 +389,7 @@
               })
               .each(function(d){ this._current = d; })
 
+          // TODO: how can I make this text a child of the arc??
           pathG.append("text")
             .attr("class","pieChartLabels")
             .attr("dy", ".35em")
