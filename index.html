@@ -78,9 +78,7 @@
       width:80%;
       padding: 5px;
     }
-    .slider{
 
-    }
     .sliderLabelMin {
       position:absolute;
       margin-left: 3px;
@@ -90,16 +88,19 @@
       font-family: Arial;
       color: black;
       font-size: 1.5vh;
+      text-anchor:middle;
+      alignment-baseline:middle;
     }
     .sliderLabelCur {
       position:absolute;
-      margin-left: -8px;
       margin-top: 30px;
       top:95%;
       left:50%;
       font-family: Arial;
       color: black;
       font-size: 1.5vh;
+      text-anchor:middle;
+      alignment-baseline:middle;
     }
     .sliderLabelMax {
       position:absolute;
@@ -110,6 +111,8 @@
       font-family: Arial;
       color: black;
       font-size: 1.5vh;
+      text-anchor:middle;
+      alignment-baseline:middle;
     }
     .image:hover {
       x:20%;
@@ -122,7 +125,7 @@
       font-family: Arial;
       color: black;
       font-size: 4vh;
-      opacity: 0.8;
+      opacity: 0.6;
     }
     /*.pieChartLabelsSel {
       font-family: Arial;
@@ -158,9 +161,9 @@
         <p id="total_stats1" class="stat"></p>
         <p id="current_demograhic1" class="demographic">Hovered Demographic: </p>
         <input id ="slider1" type="range" min="1994" max="2016" value="2005" class="slider">
-        <text class=sliderLabelMin id="sliderMin1" text-anchor="middle" alignment-baseline="middle">1994</text>
-        <text class=sliderLabelCur id="sliderCur1" text-anchor="middle" alignment-baseline="middle">2005</text>
-        <text class=sliderLabelMax id="sliderMax1" text-anchor="middle" alignment-baseline="middle">2016</text>
+        <text class=sliderLabelMin id="sliderMin1">1994</text>
+        <text class=sliderLabelCur id="sliderCur1">2005</text>
+        <text class=sliderLabelMax id="sliderMax1">2016</text>
       </div>
 
       <div id="div2" class="divSplit2">
@@ -178,9 +181,9 @@
         <p id="total_stats2" class="stat"></p>
         <p id="current_demograhic2" class="demographic">Hovered Demographic: </p>
         <input id ="slider2" type="range" min="1994" max="2016" value="2005" class="slider">
-        <text class=sliderLabelMin id="sliderMin2" text-anchor="middle" alignment-baseline="middle">1994</text>
-        <text class=sliderLabelCur id="sliderCur2" text-anchor="middle" alignment-baseline="middle">2005</text>
-        <text class=sliderLabelMax id="sliderMax2" text-anchor="middle" alignment-baseline="middle">2016</text>
+        <text class=sliderLabelMin id="sliderMin2">1994</text>
+        <text class=sliderLabelCur id="sliderCur2">2005</text>
+        <text class=sliderLabelMax id="sliderMax2">2016</text>
       </div>
     </div>
 
@@ -268,8 +271,8 @@
             //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
             yearInput = this.value - 1994;
             d3.select("#sliderCur"+num).text(this.value);
-            d3.select("#sliderCur"+num).style("left",100-(80/(2016-1994)*(2016-this.value)+10) + "%");
-            d3.select("#sliderCur"+num).style("margin-left",(yearInput*(-1)+3) + "px");
+            d3.select("#sliderCur"+num).style("left",76*(this.value-1994)/(2016-1994)+10 + "%");
+            // d3.select("#sliderCur"+num).style("margin-left",(yearInput*(-1)+3) + "px");
 
             //perform update
             render()
@@ -377,7 +380,7 @@
                      .attr("class", "pieChartLabels");*/
                   d3.select(this.parentNode).select('text')
                     .style("font-size", "4vh")
-                    .style("opacity", ".8")
+                    .style("opacity", ".6")
                   d3.select(this)
                     .transition()
                     //.attr("class", "pieChartArcs")
@@ -410,7 +413,7 @@
             .on("mouseout", function(d) {
               d3.select(this)
                   .style("font-size", "4vh")
-                  .style("opacity", ".8")
+                  .style("opacity", ".6")
               d3.select(this.parentNode).select('path')
                     .transition()
                     //.attr("class", "pieChartArcs")
@@ -461,14 +464,25 @@
           if (second == "-") {
             second= split_race[split_race.length - 3];
           }
-          return first + "." +
-                  second + "."
+          return first + "." + second + "."
         }
         var shortened= ""
-        for (var i = 0; i < split_race.length; i++) {
-          shortened = shortened + split_race[i].substring(0,2) + "."
+        for (var i = 0; i < split_race.length-1; i++) {
+          var add = split_race[i].substring(0,3) + ".";
+          shortened = shortened + add;
         }
         return shortened
+/*
+        // var split_race= race.split(new RegExp("[ ]{1,}"))
+        var split_race= race.split(/[\/\s\-]+/)
+>>>>>>> 082026f33256f673b2581624184ba6d241d29f7a
+        var shortened= ""
+        for (var i = 0; i < split_race.length-1; i++) {
+          var add = split_race[i].substring(0,3) + ".";
+          shortened = shortened + add;
+        }
+        shortened = shortened + split_race[split_race.length-1][0]
+        return shortened*/
       }
 
 
