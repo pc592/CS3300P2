@@ -85,8 +85,8 @@
       font-size: 1.5vh;     
     }
     .image:hover {
-      x:20%;
-      y:20%;
+     /* x:20%;
+      y:20%;*/
       width:60%;
       height:60%;
     }
@@ -324,6 +324,7 @@
           };
         }
 
+        var indexesSelected = [];
         function render() {
 
           // generate new random data
@@ -340,7 +341,7 @@
           var paths = g.datum(donut_data).selectAll("path")
             .data(pie(donut_data));
 
-          var indexesSelected = [];
+          indexesSelected = [];
           // create/update pie chart groups
           var pathG = paths.enter().append("g")
             .attr("id",function(d,i){return "pathG"+i});
