@@ -104,7 +104,7 @@
     .piechartLabels {
       font-family: Arial;
       color: black;
-      /*font-size: 3vh;*/
+      font-size: 5vh;
       /*opacity: .8;*/
     }
 
@@ -350,7 +350,7 @@
               .on("mouseenter", function(d) {
                 // console.log(this.parentNode)
                 d3.select(this.parentNode).select('text')
-                  .style("font-size", "10vh")
+                  .style("font-size", "8vh")
                 d3.select(this)
                    .attr("d", arcOver)
                    .attr("stroke-width",6);
@@ -358,7 +358,7 @@
               .on("mouseleave", function(d) {
                 if(indexesSelected.indexOf(d.index) == -1){
                   d3.select(this.parentNode).select('text')
-                    .style("font-size", "4vh")
+                    .style("font-size", "5vh")
                   d3.select(this).transition()
                      .attr("d", arc)
                      .attr("stroke","none");
@@ -366,7 +366,7 @@
               })
               .on("click", function(d){
                 d3.select(this.parentNode).select('text')
-                  .style("font-size", "10vh")
+                  .style("font-size", "8vh")
                 d3.select(this)
                  .attr("d", arcOver)
                  .attr("stroke-width",6);
@@ -383,7 +383,7 @@
               .attr("dy", ".35em")
               .on("mouseenter", function(d) {
                 d3.select(this)
-                  .style("font-size", "10vh");
+                  .style("font-size", "8vh");
                 d3.select(this.parentNode).select('path')
                   .transition()
                   .attr("d", arcOver)
@@ -392,7 +392,7 @@
               .on("mouseleave", function(d) {
                 if(indexesSelected.indexOf(d.index) == -1){
                   d3.select(this)
-                    .style("font-size", "4vh");
+                    .style("font-size", "5vh");
                 d3.select(this.parentNode).select('path')
                   .transition()
                   .attr("d", arc)
@@ -401,7 +401,7 @@
               })
               .on("click", function(d){
                 d3.select(this)
-                  .style("font-size", "10vh")
+                  .style("font-size", "8vh")
                 d3.select(this.parentNode).select('path')
                  .attr("d", arcOver)
                  .attr("stroke-width",6);
