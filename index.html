@@ -38,6 +38,15 @@
       color: black;
       font-size: 2vmin;
     }
+    .stat {
+      position:absolute;
+      top:80%;
+      left:50%;  
+      margin-left:-35%; 
+      font-family: Arial;
+      color: black;
+      font-size: 2vmin;   
+    }
     .donut {
       position:absolute;
       width: 60%;
@@ -91,26 +100,24 @@
       height:60%;
     }
 
-    /*.labelArc {
-      font-size:3vh;
-      opacity:0.8;
-    }
-
-    .labelArc:hover {
-        font-size:5vh;
-        opacity:1;
-    }*/
-
-    .piechartLabels {
+    .pieChartLabels {
       font-family: Arial;
       color: black;
       font-size: 5vh;
-      /*opacity: .8;*/
+    }
+    .pieChartLabelsSel {
+      font-family: Arial;
+      color: black;
+      font-size: 8vh;
     }
 
-    /*.pieChartArcs { opacity:0.9; }
+    .pieChartArcs {
+      opacity:0.8;
+    }
 
-    .piechartArcs:hover { opacity:1; }*/
+    .piechartArcs:hover {
+      opacity:1;
+    }
 
   </style>
 
@@ -127,7 +134,8 @@
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut1" class="donut"><p id="total_stats1"></p></svg>
+        <svg id="donut1" class="donut">
+        <p id="total_stats1" class="stat"></p></svg>
         <input id ="slider1" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin1" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur1" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -145,7 +153,8 @@
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut2" class="donut"><p id="total_stats2"></p></svg>
+        <svg id="donut2" class="donut">
+        <p id="total_stats2" class="stat"></p></svg>
         <input id ="slider2" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin2" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur2" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -294,10 +303,6 @@
         .outerRadius(oRadius + 10)
         .innerRadius(iRadius);
 
-        var labelArc = d3.arc()
-          .outerRadius(oRadius*1.2)
-          .innerRadius(iRadius);
-
         // creates the pie chart container
         var g = svg.append("g")
           .attr("transform", translate(side/2,side/2));
@@ -343,84 +348,95 @@
             .attr("id",function(d,i){return "pathG"+i});
 
           pathG.append("path")
-              .attr("class","piechart labelArc")
+              .attr("class","pieChartArcs")
             .merge(pathG)
               .attr("fill", function(d,i){ return color(i); })
               .attr("d", arc)
               .on("mouseenter", function(d) {
-                // console.log(this.parentNode)
-                d3.select(this.parentNode).select('text')
-                  .style("font-size", "8vh")
+                this.parentNode.children[1].classList.remove("pieChartLabels")
+                this.parentNode.children[1].classList.add("pieChartLabelsSel")
+                // d3.select(this.parentNode).select('text')
+                //   .style("font-size", "8vh")
                 d3.select(this)
                    .attr("d", arcOver)
-                   .attr("stroke-width",6);
+                   // .attr("stroke-width",6);
               })
               .on("mouseleave", function(d) {
                 if(indexesSelected.indexOf(d.index) == -1){
-                  d3.select(this.parentNode).select('text')
-                    .style("font-size", "5vh")
+                  this.parentNode.children[1].classList.add("pieChartLabels")
+                  this.parentNode.children[1].classList.remove("pieChartLabelsSel")
+                  // d3.select(this.parentNode).select('text')
+                  //   .style("font-size", "5vh")
                   d3.select(this).transition()
                      .attr("d", arc)
-                     .attr("stroke","none");
+                     // .attr("stroke","none");
                 }
               })
               .on("click", function(d){
-                d3.select(this.parentNode).select('text')
-                  .style("font-size", "8vh")
+                this.parentNode.children[1].classList.remove("pieChartLabels")
+                this.parentNode.children[1].classList.add("pieChartLabelsSel")
+                // d3.select(this.parentNode).select('text')
+                //   .style("font-size", "8vh")
                 d3.select(this)
                  .attr("d", arcOver)
-                 .attr("stroke-width",6);
+                 // .attr("stroke-width",6);
                 if(indexesSelected.indexOf(d.index) == -1){
                   indexesSelected.push(d.index);
                   partialStats += donut_data[d.index];
-                  var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
+                  var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of selected race(s): " + partialStats);
                 }
               })
               .each(function(d){ this._current = d; })
 
           pathG.append("text")
-              .attr("class","piechartLabels")
-              .attr("dy", ".35em")
-              .on("mouseenter", function(d) {
-                d3.select(this)
-                  .style("font-size", "8vh");
-                d3.select(this.parentNode).select('path')
-                  .transition()
-                  .attr("d", arcOver)
-                  .attr("stroke",6);
-              })
-              .on("mouseleave", function(d) {
-                if(indexesSelected.indexOf(d.index) == -1){
-                  d3.select(this)
-                    .style("font-size", "5vh");
-                d3.select(this.parentNode).select('path')
-                  .transition()
-                  .attr("d", arc)
-                  .attr("stroke","none");
-                }
-              })
-              .on("click", function(d){
-                d3.select(this)
-                  .style("font-size", "8vh")
-                d3.select(this.parentNode).select('path')
-                 .attr("d", arcOver)
-                 .attr("stroke-width",6);
-                if(indexesSelected.indexOf(d.index) == -1){
-                  indexesSelected.push(d.index);
-                  partialStats += donut_data[d.index];
-                  var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
-                }
-              })
-            .merge(pathG)
-              .attr("transform", function(d) {
-                var pos = arc.centroid(d);
-                return "translate(" + pos + ")";
-              })
-              .style("text-anchor", "middle")
-              .text(function(d) {
-                  return race_shortened(racedic.get(d.index));
-              })
-              .each(function(d){ this._current = d; });
+            .attr("class","pieChartLabels")
+            .attr("dy", ".35em")
+            .on("mouseenter", function(d) {
+              this.parentNode.children[1].classList.remove("pieChartLabels")
+              this.parentNode.children[1].classList.add("pieChartLabelsSel")
+              // d3.select(this)
+              //   .style("font-size", "8vh");
+              d3.select(this.parentNode).select('path')
+                .transition()
+                .attr("d", arcOver)
+                // .attr("stroke",6);
+            })
+            .on("mouseleave", function(d) {
+              if(indexesSelected.indexOf(d.index) == -1){
+                this.parentNode.children[1].classList.add("pieChartLabels")
+                this.parentNode.children[1].classList.remove("pieChartLabelsSel")
+                // d3.select(this)
+                //   .style("font-size", "5vh");
+                // d3.select(this.parentNode).select('path')
+                //   .transition()
+                //   .attr("d", arc)
+                  // .attr("stroke","none");
+              }
+            })
+            .on("click", function(d){
+              this.parentNode.children[1].classList.remove("pieChartLabels")
+              this.parentNode.children[1].classList.add("pieChartLabelsSel")
+              // d3.select(this)
+              //   .style("font-size", "8vh")
+              d3.select(this.parentNode).select('path')
+               .attr("d", arcOver)
+               // .attr("stroke-width",6);
+              if(indexesSelected.indexOf(d.index) == -1){
+                indexesSelected.push(d.index);
+                partialStats += donut_data[d.index];
+                var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
+              }
+            })
+          .merge(pathG)
+            .attr("transform", function(d) {
+              var pos = arc.centroid(d);
+              return "translate(" + pos + ")";
+            })
+            .style("text-anchor", "middle")
+            .text(function(d) {
+                return race_shortened(racedic.get(d.index));
+            })
+            .each(function(d){ this._current = d; });
 
           svg.selectAll("image").remove();
           var image = svg.selectAll("image")
@@ -454,7 +470,7 @@
           totalStats += Object.values(year[yearInput])[1][item][schoolInput];
           return Object.values(year[yearInput])[1][item][schoolInput];
         });
-        d3.select("#total_stats"+num).text("Total Number of Admitted students " + totalStats);
+        d3.select("#total_stats"+num).text("Number of admitted students total: " + totalStats);
         return returnedData;
       };
 
