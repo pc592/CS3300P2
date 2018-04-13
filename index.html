@@ -340,6 +340,7 @@
           var paths = g.datum(donut_data).selectAll("path")
             .data(pie(donut_data));
 
+          var indexesSelected = [];
           // create/update pie chart groups
           var pathG = paths.enter().append("g")
             .attr("id",function(d,i){return "pathG"+i});
@@ -358,11 +359,13 @@
                    .attr("stroke-width",6);
               })
               .on("mouseleave", function(d) {
+                if(indexesSelected.indexOf(d.index) == -1){
                   d3.select(this.parentNode).select('text')
                     .style("font-size", "4vh")
                   d3.select(this).transition()
                      .attr("d", arc)
                      .attr("stroke","none");
+                }
               })
               .on("click", function(d){
                 d3.select(this.parentNode).select('text')
@@ -370,12 +373,11 @@
                 d3.select(this)
                  .attr("d", arcOver)
                  .attr("stroke-width",6);
-                // console.log("I'm at the partialStat")
-                // console.log(totalStats)
-                // console.log(donut_data[d.index]);
-                partialStats += donut_data[d.index];
-                var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
-                // console.log(changeStat.value)
+                if(indexesSelected.indexOf(d.index) == -1){
+                  indexesSelected.push(d.index);
+                  partialStats += donut_data[d.index];
+                  var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
+                }
               })
               .each(function(d){ this._current = d; })
 
@@ -411,7 +413,10 @@
               .attr("x","25%")
               .attr("y","25%")
             .merge(image)
-              .attr("xlink:href", "images/"+schoolInput+".png");
+              .attr("xlink:href", "images/"+schoolInput+".png")
+            .on("click", function(d){
+              render();
+            });
         }
 
       }
