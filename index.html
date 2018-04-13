@@ -84,7 +84,12 @@
       color: black;
       font-size: 1.5vh;
     }
-
+    .image:hover {
+      x:20%;
+      y:20%;
+      width:60%;
+      height:60%;
+    }
 
     /*.labelArc {
       font-size:3vh;
@@ -99,16 +104,9 @@
     .piechartLabels {
       font-family: Arial;
       color: black;
-      /*font-size: 3vh;*/
+      font-size: 5vh;
       /*opacity: .8;*/
     }
-
-    .piechartLabels:hover {
-      font-size: 15vh;
-      /*opacity: .8;*/
-    }
-
-
 
     /*.pieChartArcs { opacity:0.9; }
 
@@ -129,7 +127,7 @@
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut1" class="donut"></svg>
+        <svg id="donut1" class="donut"><p id="total_stats1"></p></svg>
         <input id ="slider1" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin1" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur1" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -147,7 +145,7 @@
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut2" class="donut"></svg>
+        <svg id="donut2" class="donut"><p id="total_stats2"></p></svg>
         <input id ="slider2" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin2" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur2" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -161,6 +159,7 @@
       var race;
       var gender;
       var returnedData;
+      var racedic = d3.map();
 
       d3.csv("data/RaceByYear.csv", parseRow, callback);
 
@@ -216,6 +215,21 @@
                         "Harvard", "Princeton", "UPenn", "Yale"]
       // var school_maps = [];
 
+
+      function race_shortened(race) {
+        var split_race= race.split(new RegExp("[ ]{1,}"))
+        if (split_race.length >= 3) {
+          return split_race[1].substring(0,3) + "." +
+                  split_race[split_race.length - 1].substring(0,3) + "."
+        }
+        var shortened= ""
+        for (var i = 0; i < split_race.length; i++) {
+          shortened = shortened + split_race[i].substring(0,2) + "."
+        }
+        return shortened
+      }
+
+
       function createVisualization(num) {
 
         var winHeight = window.innerHeight-10;
@@ -225,10 +239,12 @@
         //for makeDataSchool
         //Will store race names as the value, index number as key
         //Indexes will match the keys of the data created in makeDataSchool
-        var racedic = d3.map();
 
         // year from slider
         var yearInput= 0;
+
+        var totalStats=0;
+        var partialStats=0;
 
         //TODO: 2008 and 2009 have double the number of races..!
 
@@ -246,6 +262,7 @@
 
         // school name from radio buttons
         var schoolInput = "Cornell";
+        // var schoolInput = school_list[Math.floor(Math.random()*8)]
         var radioInput = d3.selectAll("#schoolName" + num)
           .on("change", function(){
             schoolInput = this.value;
@@ -262,12 +279,11 @@
           .attr("height", "75%")  // each svg takes up 75% of the window
           .attr("viewBox", "0 0 "+side+" "+side)   // allows for relative resizing
           .append("g")
-          .attr("id", "labelName" + num);
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
-        console.log(oRadius)
+        //console.log(oRadius)
         var iRadius = side / 2.75;
-        console.log(iRadius)
+        //console.log(iRadius)
 
         // construct arc generator
         var arc = d3.arc()
@@ -286,75 +302,10 @@
         var g = svg.append("g")
           .attr("transform", translate(side/2,side/2));
 
-        g.append("image")
-          .attr("width","50%")
-          .attr("height","50%")
-          .attr("x","-25%")
-          .attr("y","-25%")
-          .attr("xlink:href", "images/Cornell.png");
-
         // construct default pie laoyut
         var pie = d3.pie().value(function(d){ return d; }).sort(null);
 
         render();
-
-        // // grab data
-        // var donut_data= makeDataSchool(school_list);
-
-        // // enter data
-        // var paths = g.datum(donut_data).selectAll("path")
-        //   .data(pie(donut_data))
-
-        // // create/update pie chart
-        // var pathG = paths.enter().append("g");
-
-        // // remove data if unneeded
-        // pathG.exit().remove();
-
-        // pathG.append("path")
-        //     .attr("class","piechartArcs labelArc")
-        //   .merge(pathG)
-        //     .attr("d", arc)
-        //     .attr("fill", function(d,i){ return color(i); })
-        //     .each(function(d,i) {
-        //       this._current = d;
-        //     })
-        //     //I commented the mouseenter off when trying to figure out how to make click work
-        //     .on("mouseenter", function(d) {
-        //       d3.select(this.parentNode).select('text')
-        //         .style("font-size", "10vh")
-        //       d3.select(this)
-        //          .attr("d", arcOver)
-        //          .attr("stroke-width",6);
-        //     })
-        //     .on("mouseleave", function(d) {
-        //         d3.select(this.parentNode).select('text')
-        //           .style("font-size", "4vh")
-        //         d3.select(this).transition()
-        //            .attr("d", arc)
-        //            .attr("stroke","none");
-        //     })
-        //     .on("click", function(d){
-        //       this.off("mouseleave mouseenter");
-        //       d3.select(this.parentNode).select('text')
-        //         .style("font-size", "10vh")
-        //       d3.select(this)
-        //        .attr("d", arcOver)
-        //        .attr("stroke-width",6);
-        //     });
-
-        // pathG
-        // .append("text")
-        // .attr("class","piechartLabels")
-        // .attr("dy", ".35em")
-        // .attr("transform", function(d) {
-        //   var pos = arc.centroid(d);
-        //   return "translate(" + pos + ")";
-        // })
-        // .style("text-anchor", "middle")
-        // .text(function(d) {
-        //     return race_shortened(racedic.get(d.index));
-        // });
 
         function race_shortened(race) {
           var split_race= race.split(new RegExp("[ ]{1,}"))
@@ -367,136 +318,6 @@
             shortened = shortened + split_race[i].substring(0,2) + "."
           }
           return shortened
-        }
-
-        function render() {
-
-          // generate new random data
-          //donut_data = makeData(+document.getElementById("datacount").value);
-          donut_data = makeDataSchool(school_list);
-          // add transition to new path
-          g.datum(donut_data).selectAll("path")
-            .data(pie)
-            .transition().duration(1000)
-            .attrTween("d", arcTween);
-
-
-          // add any new paths
-          var paths = g.datum(donut_data).selectAll("path")
-            .data(pie(donut_data));
-
-          // create/update pie chart groups
-          var pathG = paths.enter().append("g");
-
-          pathG.append("path")
-              .attr("class","piechart labelArc")
-            .merge(pathG)
-              .attr("fill", function(d,i){ return color(i); })
-              .attr("d", arc)
-              .on("mouseenter", function(d) {
-                d3.select(this.parentNode).select('text')
-                  .style("font-size", "10vh")
-                d3.select(this)
-                   .attr("d", arcOver)
-                   .attr("stroke-width",6);
-              })
-              .on("mouseleave", function(d) {
-                  d3.select(this.parentNode).select('text')
-                    .style("font-size", "4vh")
-                  d3.select(this).transition()
-                     .attr("d", arc)
-                     .attr("stroke","none");
-              })
-              .on("click", function(d){
-                this.off("mouseleave mouseenter");
-                d3.select(this.parentNode).select('text')
-                  .style("font-size", "10vh")
-                d3.select(this)
-                 .attr("d", arcOver)
-                 .attr("stroke-width",6);
-              })
-              .each(function(d){ this._current = d; })
-          // remove data not being used
-          paths.exit().remove();
-
-          // // add any new paths
-          // var paths = g.datum(donut_data).selectAll("path")
-          //   .data(pie(donut_data))
-          //   .enter().append("path")
-          //   .attr("class","piechart labelArc")
-          //   .attr("fill", function(d,i){ return color(i); })
-          //   .attr("d", arc)
-          //   .on("mouseenter", function(d) {
-          //     d3.select(this.parentNode).select('text')
-          //       .style("font-size", "10vh")
-          //     d3.select(this)
-          //        .attr("d", arcOver)
-          //        .attr("stroke-width",6);
-          //   })
-          //   .on("mouseleave", function(d) {
-          //       d3.select(this.parentNode).select('text')
-          //         .style("font-size", "4vh")
-          //       d3.select(this).transition()
-          //          .attr("d", arc)
-          //          .attr("stroke","none");
-          //   })
-          //   .on("click", function(d){
-          //     this.off("mouseleave mouseenter");
-          //     d3.select(this.parentNode).select('text')
-          //       .style("font-size", "10vh")
-          //     d3.select(this)
-          //      .attr("d", arcOver)
-          //      .attr("stroke-width",6);
-          //   })
-          //   .each(function(d){ this._current = d; })
-          // // remove data not being used
-          // g.datum(donut_data).selectAll("path")
-          //   .data(pie).exit().remove();
-
-          svg.selectAll("image").remove();
-          var image = svg.selectAll("image")
-            .data([schoolInput]);
-          image.enter()
-            .append("image")
-              .attr("width","50%")
-              .attr("height","50%")
-              .attr("x","25%")
-              .attr("y","25%")
-            .merge(image)
-              .attr("xlink:href", "images/"+schoolInput+".png");
-
-          g.selectAll("text").remove();
-          var text = g.selectAll("text")
-          .data(pie(donut_data), function(d){return racedic.get(d.index); });
-
-          text.enter()
-          .append("text")
-          .attr("class","piechartLabels")
-          .attr("dy", ".35em")
-          .attr("transform", function(d) {
-            var pos = arc.centroid(d);
-            return "translate(" + pos + ")";
-          })
-          .style("text-anchor", "middle")
-          .text(function(d) {
-              return race_shortened(racedic.get(d.index));
-          });
-
-        }
-
-        //the circle should be the diversity distribution from the school
-        //selected, during the selected year
-        function makeDataSchool(school_list){
-          //will use yearInput in place of the 0 in all of the following
-          var races= Object.values(year[yearInput])[1];
-          returnedData = d3.range(races.length).map(function(item) {
-            var rac = Object.values(year[yearInput])[1][item];
-            var abvName = rac.RaceName;
-            racedic.set(item, abvName);
-            return Object.values(year[yearInput])[1][item][schoolInput];
-          });
-          return returnedData;
-        };
 
         // Store the displayed angles in _current.
         // Then, interpolate from _current to the new angles.
@@ -508,7 +329,145 @@
             return arc(i(t));
           };
         }
+
+        var indexesSelected = [];
+        function render() {
+
+          // generate new random data
+          //donut_data = makeData(+document.getElementById("datacount").value);
+          donut_data = makeDataSchool(school_list,yearInput,schoolInput,num);
+          // add transition to new path
+          g.datum(donut_data).selectAll("path")
+            .data(pie)
+            .transition().duration(1000)
+            .attrTween("d", arcTween);
+
+          g.datum(donut_data).selectAll("g").remove()
+
+          // add any new paths
+          var paths = g.datum(donut_data).selectAll("path")
+            .data(pie(donut_data));
+
+          indexesSelected = [];
+          // create/update pie chart groups
+          var pathG = paths.enter().append("g")
+            .attr("id",function(d,i){return "pathG"+i});
+
+          pathG.append("path")
+              .attr("class","piechart labelArc")
+            .merge(pathG)
+              .attr("fill", function(d,i){ return color(i); })
+              .attr("d", arc)
+              .on("mouseenter", function(d) {
+                // console.log(this.parentNode)
+                d3.select(this.parentNode).select('text')
+                  .style("font-size", "8vh")
+                d3.select(this)
+                   .attr("d", arcOver)
+                   .attr("stroke-width",6);
+              })
+              .on("mouseleave", function(d) {
+                if(indexesSelected.indexOf(d.index) == -1){
+                  d3.select(this.parentNode).select('text')
+                    .style("font-size", "5vh")
+                  d3.select(this).transition()
+                     .attr("d", arc)
+                     .attr("stroke","none");
+                }
+              })
+              .on("click", function(d){
+                d3.select(this.parentNode).select('text')
+                  .style("font-size", "8vh")
+                d3.select(this)
+                 .attr("d", arcOver)
+                 .attr("stroke-width",6);
+                if(indexesSelected.indexOf(d.index) == -1){
+                  indexesSelected.push(d.index);
+                  partialStats += donut_data[d.index];
+                  var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
+                }
+              })
+              .each(function(d){ this._current = d; })
+
+          pathG.append("text")
+              .attr("class","piechartLabels")
+              .attr("dy", ".35em")
+              .on("mouseenter", function(d) {
+                d3.select(this)
+                  .style("font-size", "8vh");
+                d3.select(this.parentNode).select('path')
+                  .transition()
+                  .attr("d", arcOver)
+                  .attr("stroke",6);
+              })
+              .on("mouseleave", function(d) {
+                if(indexesSelected.indexOf(d.index) == -1){
+                  d3.select(this)
+                    .style("font-size", "5vh");
+                d3.select(this.parentNode).select('path')
+                  .transition()
+                  .attr("d", arc)
+                  .attr("stroke","none");
+                }
+              })
+              .on("click", function(d){
+                d3.select(this)
+                  .style("font-size", "8vh")
+                d3.select(this.parentNode).select('path')
+                 .attr("d", arcOver)
+                 .attr("stroke-width",6);
+                if(indexesSelected.indexOf(d.index) == -1){
+                  indexesSelected.push(d.index);
+                  partialStats += donut_data[d.index];
+                  var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
+                }
+              })
+            .merge(pathG)
+              .attr("transform", function(d) {
+                var pos = arc.centroid(d);
+                return "translate(" + pos + ")";
+              })
+              .style("text-anchor", "middle")
+              .text(function(d) {
+                  return race_shortened(racedic.get(d.index));
+              })
+              .each(function(d){ this._current = d; });
+
+          svg.selectAll("image").remove();
+          var image = svg.selectAll("image")
+            .data([schoolInput]);
+          image.enter()
+            .append("image")
+              .attr("class","image")
+              .attr("width","50%")
+              .attr("height","50%")
+              .attr("x","25%")
+              .attr("y","25%")
+            .merge(image)
+              .attr("xlink:href", "images/"+schoolInput+".png")
+            .on("click", function(d){
+              render();
+            });
+        }
+
       }
+
+      //the circle should be the diversity distribution from the school
+      //selected, during the selected year
+      function makeDataSchool(school_list,yearInput,schoolInput,num){
+        totalStats = 0;
+        //will use yearInput in place of the 0 in all of the following
+        var races= Object.values(year[yearInput])[1];
+        returnedData = d3.range(races.length).map(function(item) {
+          var rac = Object.values(year[yearInput])[1][item];
+          var abvName = rac.RaceName;
+          racedic.set(item, abvName);
+          totalStats += Object.values(year[yearInput])[1][item][schoolInput];
+          return Object.values(year[yearInput])[1][item][schoolInput];
+        });
+        d3.select("#total_stats"+num).text("Total Number of Admitted students " + totalStats);
+        return returnedData;
+      };
 
     </script>
   </body>
