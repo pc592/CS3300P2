@@ -8,6 +8,12 @@
 
     /*body { font-size: 100%;}*/
 
+    p {
+      font-family: Arial;
+      color: black;
+      font-style: italic;
+    }
+
     .divContainer {
       position:relative;
       width:95%;
@@ -44,9 +50,8 @@
       top:10%;
       left:50%;
       margin-left:-20%;
-      padding: 20px;
-      /*padding-left: 50px;
-      padding-right: 50px;*/
+      padding-left: 50px;
+      padding-right: 50px;
     }
     .slider {
       position:absolute;
@@ -346,6 +351,7 @@
               .attr("d", arc)
               .on("mouseenter", function(d) {
                 // console.log(this.parentNode)
+                d3.select(this).lower()
                 d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
                 d3.select(this.parentNode).select('text')
                   .style("font-size", "8vh")
@@ -457,7 +463,7 @@
           totalStats += Object.values(year[yearInput])[1][item][schoolInput];
           return Object.values(year[yearInput])[1][item][schoolInput];
         });
-        d3.select("#total_stats"+num).text("Total Number of Admitted students " + totalStats);
+        d3.select("#total_stats"+num).text("Total Number of Admitted students: " + totalStats);
         return returnedData;
       };
 
