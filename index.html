@@ -381,26 +381,22 @@
               })
               .each(function(d){ this._current = d; })
 
-
-          pathG.selectAll("text").remove();
-          var text = pathG.selectAll("text")
-            .data(pie(donut_data), function(d){return racedic.get(d.index); });
-
-          text.enter()
-            .append("text")
-            .attr("class","piechartLabels")
-            .attr("dy", ".35em")
-            .attr("transform", function(d) {
-              var pos = arc.centroid(d);
-              return "translate(" + pos + ")";
-            })
-            .style("text-anchor", "middle")
-            .text(function(d) {
-                return race_shortened(racedic.get(d.index));
-            });
+          pathG.append("text")
+              .attr("class","piechartLabels")
+              .attr("dy", ".35em")
+            .merge(pathG)
+              .attr("transform", function(d) {
+                var pos = arc.centroid(d);
+                return "translate(" + pos + ")";
+              })
+              .style("text-anchor", "middle")
+              .text(function(d) {
+                  return race_shortened(racedic.get(d.index));
+              })
+              .each(function(d){ this._current = d; });
 
           // remove data not being used
-          paths.exit().remove();
+          pathG.exit().remove();
 
           svg.selectAll("image").remove();
           var image = svg.selectAll("image")
