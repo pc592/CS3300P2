@@ -44,8 +44,9 @@
       top:10%;
       left:50%;
       margin-left:-20%;
-      padding-left: 50px;
-      padding-right: 50px;
+      padding: 20px;
+      /*padding-left: 50px;
+      padding-right: 50px;*/
     }
     .slider {
       position:absolute;
@@ -105,7 +106,7 @@
       font-family: Arial;
       color: black;
       font-size: 5vh;
-      /*opacity: .8;*/
+      opacity: .5;
     }
 
     /*.pieChartArcs { opacity:0.9; }
@@ -127,7 +128,7 @@
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut1" class="donut"><p id="total_stats1"></p></svg>
+        <svg id="donut1" class="donut"><p id="total_stats1"></p><p id="current_demograhic1">Hovered Demographic: </p></svg>
         <input id ="slider1" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin1" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur1" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -145,7 +146,7 @@
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut2" class="donut"><p id="total_stats2"></p></svg>
+        <svg id="donut2" class="donut"><p id="total_stats2"></p><p id="current_demograhic2">Hovered Demographic: </p></svg>
         <input id ="slider2" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin2" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur2" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -159,7 +160,6 @@
       var race;
       var gender;
       var returnedData;
-      var racedic = d3.map();
 
       d3.csv("data/RaceByYear.csv", parseRow, callback);
 
@@ -214,21 +214,6 @@
       var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell",
                         "Harvard", "Princeton", "UPenn", "Yale"]
       // var school_maps = [];
-
-
-      function race_shortened(race) {
-        var split_race= race.split(new RegExp("[ ]{1,}"))
-        if (split_race.length >= 3) {
-          return split_race[1].substring(0,3) + "." +
-                  split_race[split_race.length - 1].substring(0,3) + "."
-        }
-        var shortened= ""
-        for (var i = 0; i < split_race.length; i++) {
-          shortened = shortened + split_race[i].substring(0,2) + "."
-        }
-        return shortened
-      }
-
 
       function createVisualization(num) {
 
@@ -309,15 +294,16 @@
 
         function race_shortened(race) {
           var split_race= race.split(new RegExp("[ ]{1,}"))
-          if (split_race.length >= 3) {
-            return split_race[1].substring(0,3) + "." +
-                    split_race[split_race.length - 1].substring(0,3) + "."
+          if (split_race.length > 3) {
+            return split_race[0].substring(0,2) + "." +
+                    split_race[split_race.length - 2].substring(0,2) + "."
           }
           var shortened= ""
           for (var i = 0; i < split_race.length; i++) {
             shortened = shortened + split_race[i].substring(0,2) + "."
           }
           return shortened
+        }
 
         // Store the displayed angles in _current.
         // Then, interpolate from _current to the new angles.
@@ -332,10 +318,10 @@
 
         var indexesSelected = [];
         function render() {
-
+          var racedic = d3.map();
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
-          donut_data = makeDataSchool(school_list,yearInput,schoolInput,num);
+          var donut_data = makeDataSchool(school_list,yearInput,schoolInput,num, racedic);
           // add transition to new path
           g.datum(donut_data).selectAll("path")
             .data(pie)
@@ -360,8 +346,10 @@
               .attr("d", arc)
               .on("mouseenter", function(d) {
                 // console.log(this.parentNode)
+                d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
                 d3.select(this.parentNode).select('text')
                   .style("font-size", "8vh")
+                  .style("opacity", 1)
                 d3.select(this)
                    .attr("d", arcOver)
                    .attr("stroke-width",6);
@@ -370,6 +358,7 @@
                 if(indexesSelected.indexOf(d.index) == -1){
                   d3.select(this.parentNode).select('text')
                     .style("font-size", "5vh")
+                    .style("opacity", .5)
                   d3.select(this).transition()
                      .attr("d", arc)
                      .attr("stroke","none");
@@ -393,8 +382,10 @@
               .attr("class","piechartLabels")
               .attr("dy", ".35em")
               .on("mouseenter", function(d) {
+                d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
                 d3.select(this)
-                  .style("font-size", "8vh");
+                  .style("font-size", "8vh")
+                  .style("opacity", 1)
                 d3.select(this.parentNode).select('path')
                   .transition()
                   .attr("d", arcOver)
@@ -403,7 +394,8 @@
               .on("mouseleave", function(d) {
                 if(indexesSelected.indexOf(d.index) == -1){
                   d3.select(this)
-                    .style("font-size", "5vh");
+                    .style("font-size", "5vh")
+                    .style("opacity", .5)
                 d3.select(this.parentNode).select('path')
                   .transition()
                   .attr("d", arc)
@@ -454,7 +446,7 @@
 
       //the circle should be the diversity distribution from the school
       //selected, during the selected year
-      function makeDataSchool(school_list,yearInput,schoolInput,num){
+      function makeDataSchool(school_list,yearInput,schoolInput,num, racedic){
         totalStats = 0;
         //will use yearInput in place of the 0 in all of the following
         var races= Object.values(year[yearInput])[1];
