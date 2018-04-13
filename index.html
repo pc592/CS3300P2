@@ -435,15 +435,14 @@
       }
 
       function race_shortened(race) {
-        var split_race= race.split(new RegExp("[ ]{1,}"))
-        if (split_race.length > 3) {
-          return split_race[0].substring(0,2) + "." +
-                  split_race[split_race.length - 2].substring(0,2) + "."
-        }
+        // var split_race= race.split(new RegExp("[ ]{1,}"))
+        var split_race= race.split(/[\/\s\-]+/)
         var shortened= ""
-        for (var i = 0; i < split_race.length; i++) {
-          shortened = shortened + split_race[i].substring(0,2) + "."
+        for (var i = 0; i < split_race.length-1; i++) {
+          var add = split_race[i].substring(0,3) + ".";
+          shortened = shortened + add;
         }
+        shortened = shortened + split_race[split_race.length-1][0]
         return shortened
       }
 
