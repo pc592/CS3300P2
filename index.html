@@ -8,6 +8,12 @@
 
     /*body { font-size: 100%;}*/
 
+    p {
+      font-family: Arial;
+      color: black;
+      font-style: italic;
+    }
+
     .divContainer {
       position:relative;
       width:95%;
@@ -23,7 +29,7 @@
       position:absolute;
       width:50%;
       height:100%;
-      left:50%;
+      left:55%;
     }
     .but {
       width: 2vmin;
@@ -33,7 +39,7 @@
       position:absolute;
       top:35%;
       left:50%;
-      margin-left:-35%;
+      margin-left:-45%;
       font-family: Arial;
       color: black;
       font-size: 2vmin;
@@ -42,17 +48,26 @@
       position:absolute;
       top:80%;
       left:50%;  
-      margin-left:-35%; 
+      margin-left:-40%; 
       font-family: Arial;
       color: black;
       font-size: 2vmin;   
     }
+    .demographic {
+      position:absolute;
+      top:75%;
+      left:50%;
+      margin-left:-40%; 
+      font-family: Arial;
+      color: black;
+      font-size: 2vmin;
+    }
     .donut {
       position:absolute;
-      width: 60%;
+      width:60%;
       top:10%;
       left:50%;
-      margin-left:-20%;
+      margin-left:-25%;
       padding-left: 50px;
       padding-right: 50px;
     }
@@ -91,7 +106,7 @@
       left:90%;
       font-family: Arial;
       color: black;
-      font-size: 1.5vh;     
+      font-size: 1.5vh;
     }
     .image:hover {
       x:20%;
@@ -104,11 +119,13 @@
       font-family: Arial;
       color: black;
       font-size: 5vh;
+      opacity: 0.5;
     }
     .pieChartLabelsSel {
       font-family: Arial;
       color: black;
       font-size: 8vh;
+      opacity: 1;
     }
 
     .pieChartArcs {
@@ -134,8 +151,9 @@
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut1" class="donut">
-        <p id="total_stats1" class="stat"></p></svg>
+        <svg id="donut1" class="donut"></svg>
+        <p id="total_stats1" class="stat"></p>
+        <p id="current_demograhic1" class="demographic">Hovered Demographic: </p>
         <input id ="slider1" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin1" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur1" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -153,8 +171,9 @@
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Princeton" class="but"> Princeton<br>
           <input type="radio" id="schoolName2" name="schoolInputValue1" value="Yale" class="but"> Yale<br>
         </form>
-        <svg id="donut2" class="donut">
-        <p id="total_stats2" class="stat"></p></svg>
+        <svg id="donut2" class="donut"></svg>
+        <p id="total_stats2" class="stat"></p>
+        <p id="current_demograhic2" class="demographic">Hovered Demographic: </p>
         <input id ="slider2" type="range" min="1994" max="2016" value="2005" class="slider">
         <div class=sliderLabelMin id="sliderMin2" text-anchor="middle" alignment-baseline="middle">1994</div>
         <div class=sliderLabelCur id="sliderCur2" text-anchor="middle" alignment-baseline="middle">2005</div>
@@ -168,7 +187,6 @@
       var race;
       var gender;
       var returnedData;
-      var racedic = d3.map();
 
       d3.csv("data/RaceByYear.csv", parseRow, callback);
 
@@ -223,21 +241,6 @@
       var school_list= ["Columbia", "Dartmouth", "Brown", "Cornell",
                         "Harvard", "Princeton", "UPenn", "Yale"]
       // var school_maps = [];
-
-
-      function race_shortened(race) {
-        var split_race= race.split(new RegExp("[ ]{1,}"))
-        if (split_race.length >= 3) {
-          return split_race[1].substring(0,3) + "." +
-                  split_race[split_race.length - 1].substring(0,3) + "."
-        }
-        var shortened= ""
-        for (var i = 0; i < split_race.length; i++) {
-          shortened = shortened + split_race[i].substring(0,2) + "."
-        }
-        return shortened
-      }
-
 
       function createVisualization(num) {
 
@@ -312,7 +315,6 @@
 
         render();
 
-
         // Store the displayed angles in _current.
         // Then, interpolate from _current to the new angles.
         // During the transition, _current is updated in-place by d3.interpolate.
@@ -326,10 +328,10 @@
 
         var indexesSelected = [];
         function render() {
-
+          var racedic = d3.map();
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
-          donut_data = makeDataSchool(school_list,yearInput,schoolInput,num);
+          var donut_data = makeDataSchool(school_list,yearInput,schoolInput,num, racedic);
           // add transition to new path
           g.datum(donut_data).selectAll("path")
             .data(pie)
@@ -357,6 +359,8 @@
                 this.parentNode.children[1].classList.add("pieChartLabelsSel")
                 // d3.select(this.parentNode).select('text')
                 //   .style("font-size", "8vh")
+                // d3.select(this).lower()
+                d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
                 d3.select(this)
                    .attr("d", arcOver)
                    // .attr("stroke-width",6);
@@ -391,11 +395,12 @@
           pathG.append("text")
             .attr("class","pieChartLabels")
             .attr("dy", ".35em")
-            .on("mouseenter", function(d) {
+            .on("mouseenter", function(d,i) {
               this.parentNode.children[1].classList.remove("pieChartLabels")
               this.parentNode.children[1].classList.add("pieChartLabelsSel")
               // d3.select(this)
               //   .style("font-size", "8vh");
+              d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
               d3.select(this.parentNode).select('path')
                 .transition()
                 .attr("d", arcOver)
@@ -407,10 +412,13 @@
                 this.parentNode.children[1].classList.remove("pieChartLabelsSel")
                 // d3.select(this)
                 //   .style("font-size", "5vh");
-                // d3.select(this.parentNode).select('path')
-                //   .transition()
-                //   .attr("d", arc)
-                  // .attr("stroke","none");
+                //TODO: without the below, moving directly off the text without crossing
+                //  into the arc will keep the arc expanded, but with the below, moving
+                //  off the text into the arc will still minimize the arc...
+                d3.select(this.parentNode).select('path')
+                  .transition()
+                  .attr("d", arc)
+                  .attr("stroke","none");
               }
             })
             .on("click", function(d){
@@ -424,7 +432,7 @@
               if(indexesSelected.indexOf(d.index) == -1){
                 indexesSelected.push(d.index);
                 partialStats += donut_data[d.index];
-                var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of Selected race(s): " + partialStats);
+                var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of selected race(s): " + partialStats);
               }
             })
           .merge(pathG)
@@ -457,9 +465,23 @@
 
       }
 
+      function race_shortened(race) {
+        var split_race= race.split(new RegExp("[ ]{1,}"))
+        if (split_race.length > 3) {
+          return split_race[0].substring(0,2) + "." +
+                  split_race[split_race.length - 2].substring(0,2) + "."
+        }
+        var shortened= ""
+        for (var i = 0; i < split_race.length; i++) {
+          shortened = shortened + split_race[i].substring(0,2) + "."
+        }
+        return shortened
+      }
+
+
       //the circle should be the diversity distribution from the school
       //selected, during the selected year
-      function makeDataSchool(school_list,yearInput,schoolInput,num){
+      function makeDataSchool(school_list,yearInput,schoolInput,num, racedic){
         totalStats = 0;
         //will use yearInput in place of the 0 in all of the following
         var races= Object.values(year[yearInput])[1];
