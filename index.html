@@ -366,8 +366,8 @@
                   .attr("d", arcOver);
               })
               .on("mouseout", function(d) {
-                d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
                 if(indexesSelected.indexOf(d.index) == -1){
+                  d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
                   d3.select(this.parentNode).select('text')
                     .style("font-size", "4vh")
                     .style("opacity", ".6")
@@ -397,13 +397,15 @@
               d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
             })
             .on("mouseout", function(d) {
-              d3.select(this)
-                .style("font-size", "4vh")
-                .style("opacity", ".6")
-              d3.select(this.parentNode).select('path')
-                .transition()
-                .attr("d", arc);
-              d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
+              if(indexesSelected.indexOf(d.index) == -1){
+                d3.select(this)
+                  .style("font-size", "4vh")
+                  .style("opacity", ".6")
+                d3.select(this.parentNode).select('path')
+                  .transition()
+                  .attr("d", arc);
+                d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
+              }
             })
             .on("click", function(d){
               if(indexesSelected.indexOf(d.index) == -1){
