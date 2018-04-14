@@ -127,12 +127,12 @@
       font-size: 4vh;
       opacity: 0.6;
     }
-    /*.pieChartLabelsSel {
+    .pieChartLabelsSel {
       font-family: Arial;
       color: black;
       font-size: 8vh;
       opacity: 1;
-    }*/
+    }
 
     .pieChartArcs {
       opacity:0.8;
@@ -194,7 +194,7 @@
       var gender;
       var returnedData;
 
-      d3.csv("data/RaceByYear.csv", parseRow, callback);
+      d3.csv("data/temp.csv", parseRow, callback);
 
       function parseRow(row) {
         var newRow = {};
@@ -272,10 +272,7 @@
             yearInput = this.value - 1994;
             d3.select("#sliderCur"+num).text(this.value);
             d3.select("#sliderCur"+num).style("left",76*(this.value-1994)/(2016-1994)+10 + "%");
-            // d3.select("#sliderCur"+num).style("margin-left",(yearInput*(-1)+3) + "px");
-
-            //perform update
-            render()
+            render();
           });
 
         // school name from radio buttons
@@ -284,24 +281,22 @@
         var radioInput = d3.selectAll("#schoolName" + num)
           .on("change", function(){
             schoolInput = this.value;
-            render()
+            render();
           });
 
         var color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // draw and append the container
-        // play with width/height percentages to make room for buttons/sliders/selectors
         // **must be percentages to work with viewBox;
         var svg = d3.select("#donut"+num)
           .attr("width", "75%")   // each svg takes up 50% of the window
           .attr("height", "75%")  // each svg takes up 75% of the window
           .attr("viewBox", "0 0 "+side+" "+side)   // allows for relative resizing
-          .append("g")
+          .append("g");
+
         // set the thickness of the inner and outer radii
         var oRadius = side / 2;
-        //console.log(oRadius)
         var iRadius = side / 2.75;
-        //console.log(iRadius)
 
         // construct arc generator
         var arc = d3.arc()
@@ -363,27 +358,21 @@
               .attr("d", arc)
               .on("mouseover", function(d) {
                 d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
-                /*d3.select(this.parentNode).select('text')
-                   .attr("class", "pieChartLabelsSel");*/
                 d3.select(this.parentNode).select('text')
                   .style("font-size", "8vh")
                   .style("opacity", "1")
                 d3.select(this)
                   .transition()
-                  //.attr("class", "pieChartArcsSel")
                   .attr("d", arcOver);
               })
               .on("mouseout", function(d) {
-                //d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
+                d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
                 if(indexesSelected.indexOf(d.index) == -1){
-                 /* d3.select(this.parentNode).select('text')
-                     .attr("class", "pieChartLabels");*/
                   d3.select(this.parentNode).select('text')
                     .style("font-size", "4vh")
                     .style("opacity", ".6")
                   d3.select(this)
                     .transition()
-                    //.attr("class", "pieChartArcs")
                     .attr("d", arc);
                 }
               })
@@ -399,25 +388,22 @@
             .attr("class","pieChartLabels")
             .attr("dy", ".35em")
             .on("mouseenter", function(d,i) {
-              /*d3.select(this.parentNode).select('text')
-                 .attr("class", "pieChartLabelsSel");*/
               d3.select(this)
                   .style("font-size", "8vh")
                   .style("opacity", "1")
               d3.select(this.parentNode).select('path')
                 .transition()
-                //.attr("class", "pieChartArcsSel")
                 .attr("d", arcOver);
               d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
             })
             .on("mouseout", function(d) {
               d3.select(this)
-                  .style("font-size", "4vh")
-                  .style("opacity", ".6")
+                .style("font-size", "4vh")
+                .style("opacity", ".6")
               d3.select(this.parentNode).select('path')
-                    .transition()
-                    //.attr("class", "pieChartArcs")
-                    .attr("d", arc);
+                .transition()
+                .attr("d", arc);
+              d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
             })
             .on("click", function(d){
               if(indexesSelected.indexOf(d.index) == -1){
@@ -433,7 +419,9 @@
             })
             .style("text-anchor", "middle")
             .text(function(d) {
+              if (d.data != 0) {
                 return race_shortened(racedic.get(d.index));
+              }
             })
             .each(function(d){ this._current = d; });
 
@@ -457,32 +445,42 @@
       }
 
       function race_shortened(race) {
-        var split_race= race.split(new RegExp("[ ]{1,}"))
-        if (split_race.length > 3) {
-          var first= split_race[0].substring(0,2)
-          var second= split_race[split_race.length - 2].substring(0,2)
-          if (second == "-") {
-            second= split_race[split_race.length - 3];
-          }
-          return first + "." + second + "."
-        }
-        var shortened= ""
-        for (var i = 0; i < split_race.length-1; i++) {
-          var add = split_race[i].substring(0,3) + ".";
-          shortened = shortened + add;
-        }
-        return shortened
-/*
         // var split_race= race.split(new RegExp("[ ]{1,}"))
+        // if (split_race.length > 3) {
+        //   var first= split_race[0].substring(0,2)
+        //   var second= split_race[split_race.length - 2].substring(0,2)
+        //   if (second == "-") {
+        //     second= split_race[split_race.length - 3];
+        //   }
+        //   return first + "." + second + "."
+        // }
+        // var shortened= ""
+        // for (var i = 0; i < split_race.length-1; i++) {
+        //   var add = split_race[i].substring(0,3) + ".";
+        //   shortened = shortened + add;
+        // }
+        // return shortened
+
         var split_race= race.split(/[\/\s\-]+/)
->>>>>>> 082026f33256f673b2581624184ba6d241d29f7a
         var shortened= ""
         for (var i = 0; i < split_race.length-1; i++) {
-          var add = split_race[i].substring(0,3) + ".";
-          shortened = shortened + add;
+          if ((split_race[i].toUpperCase() != "RACE")
+                      && (split_race[i].toUpperCase() != "ETHNICITY")) {
+            var add = split_race[i][0].toUpperCase();
+          } else {
+            var add = ""
+          }
+          if (split_race[i].toUpperCase() == "NON") {
+            add += "-";
+          } else if (add == "") {
+            add += "";
+          } else {
+            add += ".";
+          }
+          shortened += add;
         }
         shortened = shortened + split_race[split_race.length-1][0]
-        return shortened*/
+        return shortened
       }
 
 
