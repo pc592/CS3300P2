@@ -3,162 +3,28 @@
     <title>INFO 3300 - Data-driven Web Pages</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" >
+    <link rel="stylesheet" type="text/css" href="donutStyle.css">
   </head>
 
-  <style>
-
-    /*body { font-size: 100%;}*/
-
-    p {
-      font-family: Arial;
-      color: black;
-      font-style: italic;
-    }
-
-    .divContainer {
-      position:relative;
-      width:95%;
-      height:95%;
-    }
-    .divSplit1 {
-      position:absolute;
-      width:50%;
-      height:100%;
-      left:0%;
-    }
-    .divSplit2 {
-      position:absolute;
-      width:50%;
-      height:100%;
-      left:55%;
-    }
-    .but {
-      width: 2vmin;
-      height: 2vmin;
-    }
-    .buttons {
-      position:absolute;
-      top:35%;
-      left:50%;
-      margin-left:-45%;
-      font-family: Arial;
-      color: black;
-      font-size: 2vmin;
-    }
-    .stat {
-      position:absolute;
-      top:85%;
-      left:50%;
-      margin-left:-40%;
-      font-family: Arial;
-      color: black;
-      font-size: 2vmin;
-    }
-    .demographic {
-      position:absolute;
-      top:80%;
-      left:50%;
-      margin-left:-40%;
-      font-family: Arial;
-      color: black;
-      font-size: 2vmin;
-    }
-    .donut {
-      position:absolute;
-      width:60%;
-      top:10%;
-      left:50%;
-      margin-left:-25%;
-      padding-left: 50px;
-      padding-right: 50px;
-    }
-    .slider {
-      position:absolute;
-      top:90%;
-      left:10%;
-      width:80%;
-      padding: 5px;
-    }
-
-    .sliderLabelMin {
-      position:absolute;
-      margin-left: 3px;
-      margin-top: -5px;
-      top:90%;
-      left:10%;
-      font-family: Arial;
-      color: black;
-      font-size: 1.5vh;
-      text-anchor:middle;
-      alignment-baseline:middle;
-    }
-    .sliderLabelCur {
-      position:absolute;
-      margin-top: 25px;
-      top:90%;
-      left:50%;
-      font-family: Arial;
-      color: black;
-      font-size: 1.5vh;
-      text-anchor:middle;
-      alignment-baseline:middle;
-    }
-    .sliderLabelMax {
-      position:absolute;
-      margin-left: -18px;
-      margin-top: -5px;
-      top:90%;
-      left:90%;
-      font-family: Arial;
-      color: black;
-      font-size: 1.5vh;
-      text-anchor:middle;
-      alignment-baseline:middle;
-    }
-    .image:hover {
-      x:20%;
-      y:20%;
-      width:60%;
-      height:60%;
-    }
-
-    .pieChartLabels {
-      font-family: Arial;
-      color: black;
-      font-size: 4vh;
-      opacity: 0.6;
-    }
-    .pieChartLabelsSel {
-      font-family: Arial;
-      color: black;
-      font-size: 8vh;
-      opacity: 1;
-    }
-
-    .pieChartArcs {
-      opacity:0.8;
-    }
-
-  </style>
-
   <body>
-     <div class="tabbable">
-            <ul class="nav nav-tabs">
-                <li class="active"><a class="atab" data-toggle="tab">Donut</a></li>
-                <li><a class="btab" data-toggle="tab">Line</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="a_tab">
-                    <acontent></acontent>
-                </div>
-                <div class="tab-pane active" id="b_tab">
-                    <bcontent></bcontent>
-                </div>
-            </div>
-    </div>
-
     <div id="visualization" class="divContainer">
+
+       <div class="tabbable">
+          <ul class="nav nav-tabs">
+              <li class="active"><a class="atab" data-toggle="tab">Donut</a></li>
+              <li><a class="btab" data-toggle="tab">Line</a></li>
+          </ul>
+          <div class="tab-content">
+              <div class="tab-pane active" id="a_tab">
+                  <acontent></acontent>
+              </div>
+              <div class="tab-pane active" id="b_tab">
+                  <bcontent></bcontent>
+              </div>
+          </div>
+      </div>
+
       <div id="div1" class="divSplit1">
         <form id="buttons1" action="" class="buttons">
           <input type="radio" id="schoolName1" name="schoolInputValue1" value="Brown" class="but"> Brown<br>

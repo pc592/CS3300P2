@@ -169,7 +169,7 @@
               .on("mouseover", function(d) {
                 d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
                 d3.select(this.parentNode).select('text')
-                  .style("font-size", "8vh")
+                  .style("font-size", "7vh")
                   .style("opacity", "1")
                 d3.select(this)
                   .transition()
@@ -179,8 +179,8 @@
                 if(indexesSelected.indexOf(d.index) == -1){
                   d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
                   d3.select(this.parentNode).select('text')
-                    .style("font-size", "4vh")
-                    .style("opacity", ".6")
+                    .style("font-size", "5vh")
+                    .style("opacity", "0.6")
                   d3.select(this)
                     .transition()
                     .attr("d", arc);
@@ -199,7 +199,7 @@
             .attr("dy", ".35em")
             .on("mouseenter", function(d,i) {
               d3.select(this)
-                  .style("font-size", "8vh")
+                  .style("font-size", "7vh")
                   .style("opacity", "1")
               d3.select(this.parentNode).select('path')
                 .transition()
@@ -209,8 +209,8 @@
             .on("mouseout", function(d) {
               if(indexesSelected.indexOf(d.index) == -1){
                 d3.select(this)
-                  .style("font-size", "4vh")
-                  .style("opacity", ".6")
+                  .style("font-size", "5vh")
+                  .style("opacity", "0.6")
                 d3.select(this.parentNode).select('path')
                   .transition()
                   .attr("d", arc);
