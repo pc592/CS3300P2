@@ -53,6 +53,12 @@ var svg_line = d3.select("acontent").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+svg_line.append("text")
+.attr("id", "IvyName")
+.attr("x", 30)
+.attr("y", 50)
+.style("font-size", "24pt");
+
 d3.csv("data/temp.csv", function(error, data_l) {
   data_line= data_l;
   year_line = d3.nest()
@@ -73,7 +79,7 @@ d3.csv("data/temp.csv", function(error, data_l) {
   for (var i= 0; i < school_list_line.length; i++) {
     svg_line.append("path")
     .datum(data_line)
-      .attr("id", "line" + i)
+      .attr("id", school_list_line[i])
       .attr("class", "line")
       .style("fill", "none")
       .style("opacity", 0.3)
@@ -83,6 +89,7 @@ d3.csv("data/temp.csv", function(error, data_l) {
       .on("mouseover", function(d) {
         d3.select(this)
           .style("opacity", 1)
+        svg_line.select("#IvyName").text(this.id);
       })
       .on("mouseleave", function(d) {
         d3.select(this)
