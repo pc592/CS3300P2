@@ -241,7 +241,7 @@
       var gender;
       var returnedData;
 
-      d3.csv("data/temp.csv", parseRow, callback);
+      d3.csv("data/RaceByYear.csv", parseRow, callback);
 
       function parseRow(row) {
         var newRow = {};
@@ -331,7 +331,7 @@
             render();
           });
 
-        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
 
         // draw and append the container
         // **must be percentages to work with viewBox;
