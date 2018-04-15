@@ -2,6 +2,12 @@ var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
+
+var school_list_line= ["Brown University", "Columbia University in the City of New York", "Cornell University", "Dartmouth College",
+"Harvard University", "Princeton University", "University of Pennsylvania", "Yale University"];
+
+var school_colors= ["#4E3629","#9bddff", "B31B1B", "#00693e", "#c90016", "#ff8f00", "000f3A", "#0f4d92"]
+
 var year_line;
 var data_line;
 var x = d3.scaleLinear()
@@ -10,16 +16,12 @@ var y = d3.scaleLinear()
     .range([height, 0]);
 var xAxis = d3.axisBottom(x)
 .tickFormat(d3.format("d"))
-//console.log("jere")
 var yAxis = d3.axisLeft(y)
-
-var racedic_line= d3.map()
 
 /* for each school, have a line that has a value of its diversity index? */
 /* on hover it shows a breakdown of the percent distribution of demographics */
 
 function diversityIndex(yearInput,schoolInput){
-        //will use yearInput in place of the 0 in all of the following
         var total= 0;
         numWhite= 0;
         year_inf= year_line[yearInput]
@@ -39,20 +41,11 @@ function diversityIndex(yearInput,schoolInput){
         return 100 - numWhite / total * 100;
 };
 
-var school_list_line= ["Brown University", "Columbia University in the City of New York", "Cornell University", "Dartmouth College",
-"Harvard University", "Princeton University", "University of Pennsylvania", "Yale University"];
-
-var school_colors= ["#4E3629","#9bddff", "B31B1B", "#00693e", "#c90016", "#ff8f00", "000f3A", "#0f4d92"]
-
 function make_line(school) {
   return d3.line()
     .x(function(d) {return x(Number(d.Year)); })
     .y(function(d) {return y(Number(diversityIndex(Number(d.Year)-1994,school))); });
 }
-
-/*var cornell_line = d3.line()
-    .x(function(d) {return x(Number(d.Year)); })
-    .y(function(d) {return y(Number(diversityIndex(Number(d.Year)-1994,"Cornell University"))); });*/
 
 var svg_line = d3.select("acontent").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -60,7 +53,6 @@ var svg_line = d3.select("acontent").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-console.log("jere")
 d3.csv("data/temp.csv", function(error, data_l) {
   data_line= data_l;
   year_line = d3.nest()
@@ -68,7 +60,7 @@ d3.csv("data/temp.csv", function(error, data_l) {
         .entries(data_line);
   x.domain(d3.extent(data_line, function(d) { return Number(d.Year); }));
   y.domain([0, 100]);
-  //y.domain(d3.extent(data_line, function(d) { return diversityIndex(Number(d.Year)-1994,"Cornell University"); }));
+
   svg_line.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
@@ -81,20 +73,22 @@ d3.csv("data/temp.csv", function(error, data_l) {
   for (var i= 0; i < school_list_line.length; i++) {
     svg_line.append("path")
     .datum(data_line)
+      .attr("id", "line" + i)
       .attr("class", "line")
       .style("fill", "none")
+      .style("opacity", 0.3)
       .style("stroke", school_colors[i])
-      .style("stoke-width", "1.5px")
-      .attr("d", make_line(school_list_line[i]));
+      .style("stroke-width", "4px")
+      .attr("d", make_line(school_list_line[i]))
+      .on("mouseover", function(d) {
+        d3.select(this)
+          .style("opacity", 1)
+      })
+      .on("mouseleave", function(d) {
+        d3.select(this)
+          .style("opacity", 0.3)
+      })
   }
-
-  /*svg_line.append("path")
-      .datum(data_line)
-      .attr("class", "line")
-      .style("fill", "none")
-      .style("stroke", "red")
-      .style("stoke-width", "1.5px")
-      .attr("d", cornell_line);*/
 
   // text label for the y axis
   svg_line.append("text")
