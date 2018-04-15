@@ -1,11 +1,10 @@
-
       var data;
       var year;
       var race;
       var gender;
       var returnedData;
 
-      d3.csv("data/temp.csv", parseRow, callback);
+      d3.csv("data/RaceByYear.csv", parseRow, callback);
 
       function parseRow(row) {
         var newRow = {};
@@ -95,7 +94,7 @@
             render();
           });
 
-        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
 
         // draw and append the container
         // **must be percentages to work with viewBox;
@@ -145,7 +144,6 @@
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
           var donut_data = makeDataSchool(school_list,yearInput,schoolInput,num, racedic);
-          console.log(racedic);
           // add transition to new path
           g.datum(donut_data).selectAll("path")
             .data(pie)
