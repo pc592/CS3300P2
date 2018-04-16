@@ -69,7 +69,8 @@
         //Indexes will match the keys of the data created in makeDataSchool
 
         // year from slider
-        var yearInput= 0;
+        // default is 2005, corresponds with 11
+        var yearInput= 11;
 
         var totalStats=0;
         var partialStats=0;
@@ -78,6 +79,7 @@
 
         var slideInput = d3.select("#slider"+num)
           .on("input", function(){
+            console.log(this.value);
             //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
             yearInput = this.value - 1994;
             d3.select("#sliderCur"+num).text(this.value);
@@ -144,6 +146,7 @@
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
           var donut_data = makeDataSchool(school_list,yearInput,schoolInput,num, racedic);
+          
           // add transition to new path
           g.datum(donut_data).selectAll("path")
             .data(pie)
