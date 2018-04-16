@@ -1,6 +1,5 @@
 var diversityIdxSch = {};
 var diversityIdxYrs = {};
-var diversityIdxObj = [];
 
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
@@ -50,11 +49,9 @@ function diversityIndex(yearInput,schoolInput){
   if (diversityIdxSch[schoolInput] == undefined) {
     diversityIdxSch[schoolInput] = [divIndexVal];
     diversityIdxYrs[schoolInput] = [yearInput];
-    // diversityIdxObj.push({school:schoolInput,year:yearInput+1994,divIdx:divIndexVal});
   } else if (diversityIdxYrs[schoolInput][diversityIdxYrs[schoolInput].length-1] != yearInput){
     diversityIdxSch[schoolInput].push(divIndexVal);
     diversityIdxYrs[schoolInput].push(yearInput);
-    // diversityIdxObj.push({school:schoolInput,year:yearInput+1994,divIdx:divIndexVal});
   }
 
   return divIndexVal;
