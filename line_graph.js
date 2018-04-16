@@ -9,7 +9,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 80},
 var school_list_line= ["Brown University", "Columbia University in the City of New York", "Cornell University", "Dartmouth College",
 "Harvard University", "Princeton University", "University of Pennsylvania", "Yale University"];
 
-var school_colors= ["#4E3629","#9bddff", "B31B1B", "#00693e", "#c90016", "#ff8f00", "000f3A", "#0f4d92"]
+var school_colors= ["#4E3629","#9bddff", "#B31B1B", "#00693e", "#c90016", "#ff8f00", "#000f3A", "#0f4d92"]
 
 var year_line;
 var data_line;
@@ -18,7 +18,7 @@ var x = d3.scaleLinear()
 var y = d3.scaleLinear()
     .range([height, 0]);
 var xAxis = d3.axisBottom(x)
-.tickFormat(d3.format("d"))
+    .tickFormat(d3.format("d"))
 var yAxis = d3.axisLeft(y)
 
 /* for each school, have a line that has a value of its diversity index? */
@@ -29,8 +29,6 @@ function diversityIndex(yearInput,schoolInput){
   numWhite= 0;
   year_inf= year_line[yearInput]
   var races= Object.values(year_line[yearInput])[1];
-  //console.log("races are: ");
-  //console.log(races);
   returnedData = d3.range(races.length).map(function(item) {
     var rac = races[item];
     var num_people= rac[schoolInput];
@@ -39,8 +37,6 @@ function diversityIndex(yearInput,schoolInput){
     }
     total += Number(num_people)
   });
-  //console.log("total is " + total);
-  //sonsole.log("numWhite is " + numWhite);
 
   var divIndexVal = 100 - (numWhite / total) * 100;
 

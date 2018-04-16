@@ -1,7 +1,7 @@
       var data;
       var year;
-      var race;
-      var gender;
+      // var race;
+      // var gender;
       var returnedData;
 
       d3.csv("data/RaceByYear.csv", parseRow, callback);
@@ -36,13 +36,13 @@
         .key(function (d) { return d.Year; })
         .entries(data);
 
-        race = d3.nest()
-        .key(function (d) { return d.Race; })
-        .entries(data);
+        // race = d3.nest()
+        // .key(function (d) { return d.Race; })
+        // .entries(data);
 
-        gender = d3.nest()
-        .key(function (d) { return d.Gender; })
-        .entries(data);
+        // gender = d3.nest()
+        // .key(function (d) { return d.Gender; })
+        // .entries(data);
 
         createVisualization("1");
         createVisualization("2");
@@ -89,7 +89,7 @@
         // var schoolInput = "Cornell";
         var schoolInput = school_list[Math.floor(Math.random()*8)];
         d3.select("#"+schoolInput+num)._groups[0][0].checked=true;
-        var radioInput = d3.selectAll("#schoolName" + num)
+        var radioInput = d3.selectAll("#buttons"+num).selectAll(".but")
           .on("change", function(){
             schoolInput = this.value;
             render();
