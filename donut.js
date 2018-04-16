@@ -221,7 +221,8 @@ d3.select("#b_tab").attr("class", "tab-pane");
               d3.select(this.parentNode).select('path')
                 .transition()
                 .attr("d", arcOver);
-              d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
+              d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]
+                + ", " + (donut_data[d.index]/totalStats).toFixed(2) + "%");
             })
             .on("mouseout", function(d) {
               d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
