@@ -77,7 +77,7 @@
 
         var slideInput = d3.select("#slider"+num)
           .on("input", function(){
-            console.log(this.value);
+            // console.log(this.value);
             //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
             yearInput = this.value - 1994;
             d3.select("#sliderCur"+num).text(this.value);
@@ -178,8 +178,8 @@
                   .attr("d", arcOver);
               })
               .on("mouseout", function(d) {
+                d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
                 if(indexesSelected.indexOf(d.index) == -1){
-                  d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
                   d3.select(this.parentNode).select('text')
                     .style("font-size", "5vh")
                     .style("opacity", "0.6")
@@ -220,6 +220,7 @@
               d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
             })
             .on("mouseout", function(d) {
+              d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
               if(indexesSelected.indexOf(d.index) == -1){
                 d3.select(this)
                   .style("font-size", "5vh")
@@ -227,7 +228,6 @@
                 d3.select(this.parentNode).select('path')
                   .transition()
                   .attr("d", arc);
-                d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
               }
             })
             .on("click", function(d){
