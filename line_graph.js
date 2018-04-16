@@ -1,4 +1,4 @@
-var diversityIdxSch = {};
+var diversityIdxObj = {};
 var diversityIdxYrs = {};
 
 var margin = {top: 20, right: 20, bottom: 30, left: 80},
@@ -40,13 +40,12 @@ function diversityIndex(yearInput,schoolInput){
 
   var divIndexVal = 100 - (numWhite / total) * 100;
 
-  // console.log(schoolInput,yearInput)
-
-  if (diversityIdxSch[schoolInput] == undefined) {
-    diversityIdxSch[schoolInput] = [divIndexVal];
+  // populate diversityIdxObj with diversity indexes by school and year
+  if (diversityIdxObj[schoolInput] == undefined) {
+    diversityIdxObj[schoolInput] = [divIndexVal];
     diversityIdxYrs[schoolInput] = [yearInput];
   } else if (diversityIdxYrs[schoolInput][diversityIdxYrs[schoolInput].length-1] != yearInput){
-    diversityIdxSch[schoolInput].push(divIndexVal);
+    diversityIdxObj[schoolInput].push(divIndexVal);
     diversityIdxYrs[schoolInput].push(yearInput);
   }
 
@@ -110,14 +109,17 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
         })
   }
 
+  // create tooltip div
   var div = d3.select("body").append("div")
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
+  // get all circles
   var circles = svg_line.selectAll("circle")
 
+  // for each school, add points at each year
   for (var i= 0; i < school_list_line.length; i++) {
-    circles.data(Object.values(diversityIdxSch)[i])
+    circles.data(Object.values(diversityIdxObj)[i])
       .enter().append("circle")
         .attr("r",3)
         .attr("id", school_list_line[i]+" Dot " + (1994+i))
@@ -126,6 +128,7 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
         .attr("fill",school_colors[i])
         .attr("z-index",-10)
         .style("opacity",0.8)
+        // set hover events
         .on("mouseover", function(d) {
           d3.select(this)
             .style("opacity", 1.0);
@@ -133,10 +136,11 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
           svg_line.select("path[id='"+(this.id).split(" Dot")[0]+" Line']")
             .style("opacity",0.9);
 
-          // https://en.wikipedia.org/wiki/Web_colors#X11_color_names <-- pick colors by name
+          // https://en.wikipedia.org/wiki/Web_colors#X11_color_names <-- pick colors by name!
+
+          // show tooltip
           div.transition().duration(200)
             .style("opacity", 0.9);
-
           div.html(d.toFixed(2)+"%")
             .style("width","60px")
             .style("height","20px")
@@ -149,6 +153,8 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
           svg_line.select("#IvyName").text("");
           svg_line.select("path[id='"+(this.id).split(" Dot")[0]+" Line']")
             .style("opacity",0.3);
+
+          // hide tooltip
           div.transition().duration(500)
             .style("opacity", 0); 
         })
@@ -171,6 +177,7 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
     .text("Year");
 });
 
+// annotation
 svg_line.append("text")
   .attr("y",height+margin.bottom+40+"px")
   .attr("font-size","0.75em")
