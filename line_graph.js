@@ -22,23 +22,23 @@ var yAxis = d3.axisLeft(y)
 /* on hover it shows a breakdown of the percent distribution of demographics */
 
 function diversityIndex(yearInput,schoolInput){
-        var total= 0;
-        numWhite= 0;
-        year_inf= year_line[yearInput]
-        var races= Object.values(year_line[yearInput])[1];
-        //console.log("races are: ");
-        //console.log(races);
-        returnedData = d3.range(races.length).map(function(item) {
-          var rac = races[item];
-          var num_people= rac[schoolInput];
-          if (rac.Race.indexOf("White") != -1) {
-            numWhite += Number(num_people)
-          }
-          total += Number(num_people)
-        });
-        //console.log("total is " + total);
-        //sonsole.log("numWhite is " + numWhite);
-        return 100 - numWhite / total * 100;
+  var total= 0;
+  numWhite= 0;
+  year_inf= year_line[yearInput]
+  var races= Object.values(year_line[yearInput])[1];
+  //console.log("races are: ");
+  //console.log(races);
+  returnedData = d3.range(races.length).map(function(item) {
+    var rac = races[item];
+    var num_people= rac[schoolInput];
+    if (rac.Race.indexOf("White") != -1) {
+      numWhite += Number(num_people)
+    }
+    total += Number(num_people)
+  });
+  //console.log("total is " + total);
+  //sonsole.log("numWhite is " + numWhite);
+  return 100 - numWhite / total * 100;
 };
 
 function make_line(school) {
@@ -54,10 +54,10 @@ var svg_line = d3.select("acontent").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 svg_line.append("text")
-.attr("id", "IvyName")
-.attr("x", 30)
-.attr("y", 50)
-.style("font-size", "24pt");
+  .attr("id", "IvyName")
+  .attr("x", 30)
+  .attr("y", 50)
+  .style("font-size", "24pt");
 
 d3.csv("data/temp.csv", function(error, data_l) {
   data_line= data_l;
@@ -68,13 +68,13 @@ d3.csv("data/temp.csv", function(error, data_l) {
   y.domain([0, 100]);
 
   svg_line.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
 
   svg_line.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
+    .attr("class", "y axis")
+    .call(yAxis)
 
   for (var i= 0; i < school_list_line.length; i++) {
     svg_line.append("path")
@@ -88,12 +88,13 @@ d3.csv("data/temp.csv", function(error, data_l) {
       .attr("d", make_line(school_list_line[i]))
       .on("mouseover", function(d) {
         d3.select(this)
-          .style("opacity", 1)
+          .style("opacity", 1);
         svg_line.select("#IvyName").text(this.id);
       })
       .on("mouseleave", function(d) {
         d3.select(this)
-          .style("opacity", 0.3)
+          .style("opacity", 0.3);
+        svg_line.select("#IvyName").text("");
       })
   }
 

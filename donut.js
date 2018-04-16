@@ -150,7 +150,9 @@
             .transition().duration(1000)
             .attrTween("d", arcTween);
 
-          g.datum(donut_data).selectAll("g").remove()
+
+          // g.datum(donut_data).selectAll("g").remove();
+          g.datum(donut_data).selectAll("g").exit().remove();
 
           // add any new paths
           var paths = g.datum(donut_data).selectAll("path")
