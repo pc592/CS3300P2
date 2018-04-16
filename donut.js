@@ -71,8 +71,6 @@ function createVisualization(num) {
   // default is 2005, corresponds with 11
   var yearInput= 11;
 
-  var partialStats=0;
-
   var slideInput = d3.select("#slider"+num)
     .on("input", function(){
       //Corresponds with a value 0-22 (this value goes in the x for year[x] in the comment above)
@@ -138,6 +136,7 @@ function createVisualization(num) {
   var indexesSelected = [];
   function render() {
 
+    var partialStats=0;
     var totalStats;
 
     //the circle should be the diversity distribution from the school
@@ -159,7 +158,7 @@ function createVisualization(num) {
 
     d3.select("#current_demograhic" + num).text("Hovered Demographic: ")
     var racedic = d3.map();
-    
+
     // generate new random data
     //donut_data = makeData(+document.getElementById("datacount").value);
     var donut_data = makeDataSchool(num, racedic);
