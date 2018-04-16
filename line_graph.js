@@ -1,29 +1,40 @@
+/* https://bl.ocks.org/d3noob/4db972df5d7efc7d611255d1cc6f3c4f: useful base
+for creating multi=line graph */
+
 var diversityIdxObj = {};
 var diversityIdxYrs = {};
 
+// Define margin and dimensions of web page
 var margin = {top: 20, right: 20, bottom: 30, left: 80},
     width = 900 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
 
+// list of all ivy league school names
+var school_list_line= ["Brown University", "Columbia University in the City of New York",
+"Cornell University", "Dartmouth College","Harvard University", "Princeton University",
+"University of Pennsylvania", "Yale University"];
 
-var school_list_line= ["Brown University", "Columbia University in the City of New York", "Cornell University", "Dartmouth College",
-"Harvard University", "Princeton University", "University of Pennsylvania", "Yale University"];
+// list of all ivy leage school colors
+var school_colors= ["#4E3629","#9bddff", "#B31B1B", "#00693e", "#c90016",
+"#ff8f00", "#000f3A", "#0f4d92"]
 
-var school_colors= ["#4E3629","#9bddff", "#B31B1B", "#00693e", "#c90016", "#ff8f00", "#000f3A", "#0f4d92"]
-
+// data organized by year
 var year_line;
+// raw data
 var data_line;
+// scale for x axis
 var x = d3.scaleLinear()
     .range([0, width])
+// scale for y axis
 var y = d3.scaleLinear()
     .range([height, 0]);
+// Define axes
 var xAxis = d3.axisBottom(x)
     .tickFormat(d3.format("d"))
 var yAxis = d3.axisLeft(y)
 
-/* for each school, have a line that has a value of its diversity index? */
-/* on hover it shows a breakdown of the percent distribution of demographics */
-
+/* Return the percentage of non-white students during
+ * year @yearInput and school @schoolInput */
 function diversityIndex(yearInput,schoolInput){
   var total= 0;
   numWhite= 0;
@@ -37,9 +48,7 @@ function diversityIndex(yearInput,schoolInput){
     }
     total += Number(num_people)
   });
-
   var divIndexVal = 100 - (numWhite / total) * 100;
-
   // populate diversityIdxObj with diversity indexes by school and year
   if (diversityIdxObj[schoolInput] == undefined) {
     diversityIdxObj[schoolInput] = [divIndexVal];
@@ -48,45 +57,50 @@ function diversityIndex(yearInput,schoolInput){
     diversityIdxObj[schoolInput].push(divIndexVal);
     diversityIdxYrs[schoolInput].push(yearInput);
   }
-
   return divIndexVal;
 };
 
+/* Return a line function for ivy league @school */
 function make_line(school) {
   return d3.line()
     .x(function(d) {return x(Number(d.Year)); })
     .y(function(d) {return y(Number(diversityIndex(Number(d.Year)-1994,school))); });
 }
 
+//Define the svg for the multi-line graph
 var svg_line = d3.select("acontent").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + 100 + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+//Add the text label for when hovering over the line
 svg_line.append("text")
   .attr("id", "IvyName")
   .attr("x", 30)
   .attr("y", 50)
   .style("font-size", "24pt");
 
+//Process the data
 d3.csv("data/RaceByYear.csv", function(error, data_l) {
   data_line= data_l;
+  //Map the data by year
   year_line = d3.nest()
         .key(function (d) {return d.Year; })
         .entries(data_line);
+  //Define the values of the x and y scales
   x.domain(d3.extent(data_line, function(d) { return Number(d.Year); }));
   y.domain([0, 100]);
-
+  // Add the axes to the svg
   svg_line.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
-
   svg_line.append("g")
     .attr("class", "y axis")
     .call(yAxis)
-
+  // Add a line for each of the ivy league schools,
+  // plotting diversity index vs year
   for (var i= 0; i < school_list_line.length; i++) {
     svg_line.append("path")
       .datum(data_line)
@@ -111,7 +125,7 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
 
   // create tooltip div
   var div = d3.select("body").append("div")
-    .attr("class", "tooltip")       
+    .attr("class", "tooltip")
     .style("opacity", 0);
 
   // get all circles
@@ -156,7 +170,7 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
 
           // hide tooltip
           div.transition().duration(500)
-            .style("opacity", 0); 
+            .style("opacity", 0);
         })
   }
 
@@ -169,15 +183,14 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
     .style("text-anchor", "middle")
     .text("Diversity Index*");
 
-     // text label for the x axis
+  // text label for the x axis
   svg_line.append("text")
     .attr("transform",
-          "translate(" + (width/2) + " ," +
-                         (height + margin.top + 20) + ")")
+          "translate(" + (width/2) + " ," + (height + margin.top + 20) + ")")
     .text("Year");
 });
 
-// annotation
+//annotation
 svg_line.append("text")
   .attr("y",height+margin.bottom+40+"px")
   .attr("font-size","0.75em")
