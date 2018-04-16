@@ -15,6 +15,8 @@ Race/ethnicity unknown  men (EF1994_ANR),1994,Male,0,420,0,146,543,0,0,208
 Race/ethnicity unknown  women (EF1994_ANR),1994,Female,0,340,0,135,446,0,0,199
 Non-resident alien  men (EF1994_ANR),1994,Male,223,205,388,187,298,152,554,156
 Non-resident alien  women (EF1994_ANR),1994,Female,168,108,222,119,164,103,278,72
+Two or More Races Placeholder men,1994,Male,,,,,,,,
+Two or More Races Placeholder women,1994,Female,,,,,,,,
 White non-Hispanic men (EF95_ANR),1995,Male,1785,1375,2959,1219,1866,1813,3232,1566
 White non-Hispanic women (EF95_ANR),1995,Female,1897,1001,1983,1072,1300,1399,2873,1333
 Black non-Hispanic men (EF95_ANR),1995,Male,154,158,121,92,204,139,217,182
@@ -31,6 +33,8 @@ Race-ethnicity unknown men (EF95_ANR),1995,Male,0,474,0,231,588,0,0,200
 Race-ethnicity unknown women (EF95_ANR),1995,Female,0,391,0,210,470,0,0,203
 Non-resident alien men (EF95_ANR),1995,Male,201,216,425,198,289,144,493,175
 Non-resident alien women (EF95_ANR),1995,Female,171,129,224,130,146,106,273,85
+Two or More Races Placeholder men,1995,Male,,,,,,,,
+Two or More Races Placeholder women,1995,Female,,,,,,,,
 White non-Hispanic men (EF96_ANR),1996,Male,1747,1385,2725,1184,1839,1767,3168,1580
 White non-Hispanic women (EF96_ANR),1996,Female,1975,1089,1826,1062,1324,1367,3039,1338
 Black non-Hispanic men (EF96_ANR),1996,Male,144,171,124,85,242,139,195,177
@@ -47,6 +51,8 @@ Race-ethnicity unknown men (EF96_ANR),1996,Male,0,538,262,255,611,0,0,188
 Race-ethnicity unknown women (EF96_ANR),1996,Female,0,442,179,241,512,0,0,212
 Non-resident alien men (EF96_ANR),1996,Male,196,222,424,191,276,143,460,205
 Non-resident alien women (EF96_ANR),1996,Female,167,145,237,131,155,113,276,111
+Two or More Races Placeholder men,1996,Male,,,,,,,,
+Two or More Races Placeholder women,1996,Female,,,,,,,,
 White non-Hispanic men (EF97_ANR),1997,Male,1788,1451,2655,1192,1791,1751,3073,1586
 White non-Hispanic women (EF97_ANR),1997,Female,1930,1169,1805,1088,1279,1373,3007,1365
 Black non-Hispanic men (EF97_ANR),1997,Male,134,180,125,99,249,136,189,165
@@ -63,6 +69,8 @@ Race-ethnicity unknown men (EF97_ANR),1997,Male,0,596,136,272,615,0,0,188
 Race-ethnicity unknown women (EF97_ANR),1997,Female,0,496,99,245,547,0,0,224
 Non-resident alien men (EF97_ANR),1997,Male,204,232,472,193,283,135,451,209
 Non-resident alien women (EF97_ANR),1997,Female,173,168,274,133,172,99,297,117
+Two or More Races Placeholder men,1997,Male,,,,,,,,
+Two or More Races Placeholder women,1997,Female,,,,,,,,
 White  non-Hispanic men (EF98_ANR),1998,Male,1782,1472,2760,1225,1811,1754,3118,1534
 White  non-Hispanic women (EF98_ANR),1998,Female,1950,1178,1874,1143,1336,1383,2966,1360
 Black  non-Hispanic men (EF98_ANR),1998,Male,148,161,136,104,236,137,179,161
@@ -79,6 +87,8 @@ Race/ethnicity unknown men (EF98_ANR),1998,Male,0,630,171,312,607,0,0,251
 Race/ethnicity unknown women (EF98_ANR),1998,Female,0,603,136,279,521,0,0,288
 Nonresident alien men (EF98_ANR),1998,Male,205,259,520,102,268,136,473,212
 Nonresident alien women (EF98_ANR),1998,Female,199,167,291,61,207,104,326,133
+Two or More Races Placeholder men,1998,Male,,,,,,,,
+Two or More Races Placeholder women,1998,Female,,,,,,,,
 White  non-Hispanic men (EF99_ANR),1999,Male,1751,1517,2781,1289,1758,1713,3124,1506
 White  non-Hispanic women (EF99_ANR),1999,Female,1818,1231,1886,1141,1332,1404,2955,1346
 Black  non-Hispanic men (EF99_ANR),1999,Male,146,191,137,99,243,138,182,164
@@ -95,6 +105,8 @@ Race/ethnicity unknown men (EF99_ANR),1999,Male,113,678,159,262,653,0,0,320
 Race/ethnicity unknown women (EF99_ANR),1999,Female,122,654,139,271,533,0,0,335
 Nonresident alien men (EF99_ANR),1999,Male,205,249,519,96,262,123,498,214
 Nonresident alien women (EF99_ANR),1999,Female,191,168,329,65,198,111,362,147
+Two or More Races Placeholder men,1999,Male,,,,,,,,
+Two or More Races Placeholder women,1999,Female,,,,,,,,
 White  non-Hispanic men (EF2000A),2000,Male,1523,1479,2805,1279,1781,1691,2674,1508
 White  non-Hispanic women (EF2000A),2000,Female,1648,1166,1867,1114,1347,1404,2472,1359
 Black  non-Hispanic men (EF2000A),2000,Male,151,174,130,92,250,141,186,179
@@ -111,6 +123,8 @@ Race/ethnicity unknown men (EF2000A),2000,Male,261,378,163,242,639,0,442,323
 Race/ethnicity unknown women (EF2000A),2000,Female,280,338,141,243,486,0,410,330
 Nonresident alien men (EF2000A),2000,Male,207,468,530,101,251,141,496,153
 Nonresident alien women (EF2000A),2000,Female,185,373,320,75,211,134,336,118
+Two or More Races Placeholder men,2000,Male,,,,,,,,
+Two or More Races Placeholder women,2000,Female,,,,,,,,
 White  non-Hispanic men (EF2001A),2001,Male,1394,1522,2858,1319,1781,1654,2648,1453
 White  non-Hispanic women (EF2001A),2001,Female,1552,1212,1936,1168,1441,1400,2428,1298
 Black  non-Hispanic men (EF2001A),2001,Male,154,171,146,97,256,151,204,182
@@ -127,6 +141,8 @@ Race/ethnicity unknown men (EF2001A),2001,Male,390,396,177,202,602,0,530,317
 Race/ethnicity unknown women (EF2001A),2001,Female,411,343,156,202,466,0,468,321
 Nonresident alien men (EF2001A),2001,Male,173,444,516,109,261,161,496,214
 Nonresident alien women (EF2001A),2001,Female,183,351,349,78,223,157,341,174
+Two or More Races Placeholder men,2001,Male,,,,,,,,
+Two or More Races Placeholder women,2001,Female,,,,,,,,
 White non-Hispanic men (EF2002A),2002,Male,1352,1592,2778,1277,1854,1636,2617,1453
 White non-Hispanic women (EF2002A),2002,Female,1495,1303,1969,1114,1509,1386,2428,1290
 Black non-Hispanic men (EF2002A),2002,Male,155,176,147,107,241,162,206,184
@@ -143,6 +159,8 @@ Race/ethnicity unknown men (EF2002A),2002,Male,460,421,192,162,536,0,547,300
 Race/ethnicity unknown women (EF2002A),2002,Female,532,348,174,179,424,0,496,321
 Nonresident alien men (EF2002A),2002,Male,163,394,476,102,275,178,501,232
 Nonresident alien women (EF2002A),2002,Female,176,299,350,92,233,169,376,187
+Two or More Races Placeholder men,2002,Male,,,,,,,,
+Two or More Races Placeholder women,2002,Female,,,,,,,,
 White  non-Hispanic men (EF2003A),2003,Male,1347,1650,4203,1254,1866,1641,2588,1447
 White  non-Hispanic women (EF2003A),2003,Female,1459,1317,3898,1097,1546,1333,2427,1282
 Black  non-Hispanic men (EF2003A),2003,Male,148,177,227,119,238,168,214,190
@@ -159,6 +177,8 @@ Race/ethnicity unknown men (EF2003A),2003,Male,429,451,406,176,476,0,568,303
 Race/ethnicity unknown women (EF2003A),2003,Female,522,393,492,170,381,0,529,328
 Nonresident alien men (EF2003A),2003,Male,166,303,538,114,293,198,592,258
 Nonresident alien women (EF2003A),2003,Female,189,215,450,102,233,192,461,210
+Two or More Races Placeholder men,2003,Male,,,,,,,,
+Two or More Races Placeholder women,2003,Female,,,,,,,,
 White non-Hispanic men (EF2004A),2004,Male,1471,1671,4075,1220,1865,1666,2449,1461
 White non-Hispanic women (EF2004A),2004,Female,1454,1283,3791,1084,1533,1277,2442,1230
 Black non-Hispanic men (EF2004A),2004,Male,149,178,236,124,220,168,250,186
@@ -175,6 +195,8 @@ Race/ethnicity unknown men (EF2004A),2004,Male,382,482,541,135,336,0,630,282
 Race/ethnicity unknown women (EF2004A),2004,Female,466,415,610,158,313,0,577,286
 Nonresident alien men (EF2004A),2004,Male,163,280,502,118,336,204,577,237
 Nonresident alien women (EF2004A),2004,Female,195,187,469,101,255,187,424,213
+Two or More Races Placeholder men,2004,Male,,,,,,,,
+Two or More Races Placeholder women,2004,Female,,,,,,,,
 White non-Hispanic men (EF2005A),2005,Male,1552,1660,3978,1237,1907,1680,2509,1508
 White non-Hispanic women (EF2005A),2005,Female,1497,1297,3671,1096,1569,1270,2519,1219
 Black non-Hispanic men (EF2005A),2005,Male,169,186,237,131,248,175,259,193
@@ -191,6 +213,8 @@ Race/ethnicity unknown men (EF2005A),2005,Male,361,455,631,136,325,0,654,289
 Race/ethnicity unknown women (EF2005A),2005,Female,475,436,739,157,275,0,631,305
 Nonresident alien men (EF2005A),2005,Male,170,299,544,111,347,233,580,237
 Nonresident alien women (EF2005A),2005,Female,195,212,470,109,249,190,474,201
+Two or More Races Placeholder men,2005,Male,,,,,,,,
+Two or More Races Placeholder women,2005,Female,,,,,,,,
 White non-Hispanic men (EF2006A),2006,Male,1533,1567,3800,1207,1836,1574,2326,1456
 White non-Hispanic women (EF2006A),2006,Female,1345,1198,3411,1132,1592,1182,2378,1199
 Black non-Hispanic men (EF2006A),2006,Male,169,207,267,121,245,175,294,198
@@ -207,6 +231,8 @@ Race/ethnicity unknown men (EF2006A),2006,Male,374,444,759,109,498,70,651,301
 Race/ethnicity unknown women (EF2006A),2006,Female,435,427,840,133,533,68,621,305
 Nonresident alien men (EF2006A),2006,Male,178,311,580,119,386,254,553,226
 Nonresident alien women (EF2006A),2006,Female,192,229,484,109,254,188,518,213
+Two or More Races Placeholder men,2006,Male,,,,,,,,
+Two or More Races Placeholder women,2006,Female,,,,,,,,
 White non-Hispanic men (EF2007A),2007,Male,1486,1489,3515,1222,1732,1439,2290,1424
 White non-Hispanic women (EF2007A),2007,Female,1315,1220,3190,1130,1545,1096,2251,1153
 Black non-Hispanic men (EF2007A),2007,Male,171,236,292,119,252,156,307,215
@@ -223,6 +249,8 @@ Race/ethnicity unknown men (EF2007A),2007,Male,348,412,988,99,485,179,760,289
 Race/ethnicity unknown women (EF2007A),2007,Female,426,406,1011,120,512,170,659,303
 Nonresident alien men (EF2007A),2007,Male,200,327,589,157,385,272,622,235
 Nonresident alien women (EF2007A),2007,Female,215,284,484,119,265,191,540,208
+Two or More Races Placeholder men,2007,Male,,,,,,,,
+Two or More Races Placeholder women,2007,Female,,,,,,,,
 White non-Hispanic men (EF2008A),2008,Male,1436,1415,3508,1200,1708,1390,2181,1288
 White non-Hispanic women (EF2008A),2008,Female,1215,1198,3248,1090,1504,1108,2155,1081
 Black non-Hispanic men (EF2008A),2008,Male,171,261,290,134,257,162,311,222
@@ -239,6 +267,8 @@ Race/ethnicity unknown men (EF2008A),2008,Male,393,418,996,102,484,174,841,370
 Race/ethnicity unknown women (EF2008A),2008,Female,459,421,1071,107,524,170,745,385
 Nonresident alien men (EF2008A),2008,Male,242,355,656,156,400,263,604,227
 Nonresident alien women (EF2008A),2008,Female,245,330,543,130,284,224,537,226
+Two or More Races Placeholder men,2008,Male,,,,,,,,
+Two or More Races Placeholder women,2008,Female,,,,,,,,
 White non-Hispanic men (EF2009A),2009,Male,1489,1355,3276,1147,1462,1348,2058,1196
 White non-Hispanic women (EF2009A),2009,Female,1325,1169,3067,1058,1308,1122,2004,995
 Black non-Hispanic men (EF2009A),2009,Male,140,299,310,133,221,160,321,220
@@ -255,6 +285,8 @@ Race/ethnicity unknown men (EF2009A),2009,Male,312,427,1165,124,497,118,903,430
 Race/ethnicity unknown women (EF2009A),2009,Female,361,423,1257,102,509,119,861,455
 Nonresident alien men (EF2009A),2009,Male,266,390,674,179,421,277,616,239
 Nonresident alien women (EF2009A),2009,Female,271,369,542,135,322,257,582,228
+Two or More Races Placeholder men,2009,Male,,,,,,,,
+Two or More Races Placeholder women,2009,Female,,,,,,,,
 White men (EF2010A),2010,Male,1458,1520,3310,1105,1731,1378,2438,1285
 White women (EF2010A),2010,Female,1330,1270,3104,992,1472,1131,2278,1174
 Black/African American men (EF2010A),2010,Male,150,266,303,136,224,144,285,153
