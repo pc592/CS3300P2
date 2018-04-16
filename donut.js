@@ -1,3 +1,5 @@
+      /* https://bl.ocks.org/mbostock/3887193: donut chart reference */
+
       var data;
       var year;
       // var race;

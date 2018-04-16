@@ -1,6 +1,8 @@
 /* https://bl.ocks.org/d3noob/4db972df5d7efc7d611255d1cc6f3c4f: useful base
 for creating multi=line graph */
 
+/* http://bl.ocks.org/d3noob/a22c42db65eb00d4e369: tooltip reference */
+
 var diversityIdxObj = {};
 var diversityIdxYrs = {};
 
@@ -49,6 +51,7 @@ function diversityIndex(yearInput,schoolInput){
     total += Number(num_people)
   });
   var divIndexVal = 100 - (numWhite / total) * 100;
+
   // populate diversityIdxObj with diversity indexes by school and year
   if (diversityIdxObj[schoolInput] == undefined) {
     diversityIdxObj[schoolInput] = [divIndexVal];
