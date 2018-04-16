@@ -1,9 +1,9 @@
 var diversityIdxSch = {};
 var diversityIdxYrs = {};
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var margin = {top: 20, right: 20, bottom: 30, left: 80},
+    width = 900 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
 
 
 var school_list_line= ["Brown University", "Columbia University in the City of New York", "Cornell University", "Dartmouth College",
@@ -63,10 +63,6 @@ function make_line(school) {
     .y(function(d) {return y(Number(diversityIndex(Number(d.Year)-1994,school))); });
 }
 
-var div = d3.select("body").append("div") 
-    .attr("class", "tooltip")       
-    .style("opacity", 0);
-
 var svg_line = d3.select("acontent").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + 100 + margin.top + margin.bottom)
@@ -118,13 +114,17 @@ for (var i= 0; i < school_list_line.length; i++) {
       })
 }
 
+var div = d3.select("body").append("div")
+  .attr("class", "tooltip")       
+  .style("opacity", 0);
+
 var circles = svg_line.selectAll("circle")
 
 for (var i= 0; i < school_list_line.length; i++) {
   circles.data(Object.values(diversityIdxSch)[i])
     .enter().append("circle")
       .attr("r",3)
-      .attr("id", school_list_line[i]+" Dot")
+      .attr("id", school_list_line[i]+" Dot " + (1994+i))
       .attr("cx",function(d,i){ return x(1994+i); })
       .attr("cy",function(d,i){ return y(d); })
       .attr("fill",school_colors[i])
@@ -161,7 +161,7 @@ for (var i= 0; i < school_list_line.length; i++) {
 // text label for the y axis
 svg_line.append("text")
   .attr("transform", "rotate(-90)")
-  .attr("y", 0 - margin.left)
+  .attr("y", 0 - margin.left/3*2)
   .attr("x",0 - (height / 2))
   .attr("dy", "1em")
   .style("text-anchor", "middle")
