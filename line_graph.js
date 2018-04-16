@@ -197,4 +197,4 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
 svg_line.append("text")
   .attr("y",height+margin.bottom+40+"px")
   .attr("font-size","0.75em")
-  .text("*Diversity Index is the percentage of non-white students admitted out of total students admitted")
+  .text("*Diversity Index is the percentage of non-white students enrolled out of total students enrolled")
