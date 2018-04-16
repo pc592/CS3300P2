@@ -75,8 +75,6 @@
         var totalStats=0;
         var partialStats=0;
 
-        //TODO: 2008 and 2009 have double the number of races..!
-
         var slideInput = d3.select("#slider"+num)
           .on("input", function(){
             console.log(this.value);
@@ -88,8 +86,9 @@
           });
 
         // school name from radio buttons
-        var schoolInput = "Cornell";
-        // var schoolInput = school_list[Math.floor(Math.random()*8)]
+        // var schoolInput = "Cornell";
+        var schoolInput = school_list[Math.floor(Math.random()*8)];
+        d3.select("#"+schoolInput+num)._groups[0][0].checked=true;
         var radioInput = d3.selectAll("#schoolName" + num)
           .on("change", function(){
             schoolInput = this.value;
@@ -153,9 +152,7 @@
             .transition().duration(1000)
             .attrTween("d", arcTween);
 
-
-          // g.datum(donut_data).selectAll("g").remove();
-          g.datum(donut_data).selectAll("g").exit().remove();
+          g.datum(donut_data).selectAll("g").remove();
 
           // add any new paths
           var paths = g.datum(donut_data).selectAll("path")
@@ -202,6 +199,17 @@
           pathG.append("text")
             .attr("class","pieChartLabels")
             .attr("dy", ".35em")
+          .merge(pathG)
+            .attr("transform", function(d) {
+              var pos = arc.centroid(d);
+              return "translate(" + pos + ")";
+            })
+            .style("text-anchor", "middle")
+            .text(function(d) {
+              if (d.data != 0) {
+                return race_shortened(racedic.get(d.index));
+              }
+            })
             .on("mouseenter", function(d,i) {
               d3.select(this)
                   .style("font-size", "7vh")
@@ -228,19 +236,7 @@
                 partialStats += donut_data[d.index];
                 var changeStat = d3.select("#total_stats"+num).text("Number of admitted students of selected race(s): " + partialStats);
               };
-            })
-          .merge(pathG)
-            .attr("transform", function(d) {
-              var pos = arc.centroid(d);
-              return "translate(" + pos + ")";
-            })
-            .style("text-anchor", "middle")
-            .text(function(d) {
-              if (d.data != 0) {
-                return race_shortened(racedic.get(d.index));
-              }
-            })
-            .each(function(d){ this._current = d; });
+            });
 
           svg.selectAll("image").remove();
           var image = svg.selectAll("image")
