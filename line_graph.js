@@ -79,96 +79,96 @@ d3.csv("data/RaceByYear.csv", function(error, data_l) {
   x.domain(d3.extent(data_line, function(d) { return Number(d.Year); }));
   y.domain([0, 100]);
 
-svg_line.append("g")
-  .attr("class", "x axis")
-  .attr("transform", "translate(0," + height + ")")
-  .call(xAxis);
+  svg_line.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
 
-svg_line.append("g")
-  .attr("class", "y axis")
-  .call(yAxis)
+  svg_line.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
 
-for (var i= 0; i < school_list_line.length; i++) {
-  svg_line.append("path")
-    .datum(data_line)
-      .attr("id", school_list_line[i]+" Line")
-      .attr("class", "line")
-      .style("fill", "none")
-      .style("opacity", 0.3)
-      .style("stroke", school_colors[i])
-      .style("stroke-width", "4px")
-      .attr("d", make_line(school_list_line[i]))
-      .on("mouseover", function(d) {
-        d3.select(this)
-          .style("opacity", 0.9);
-        svg_line.select("#IvyName").text((this.id).split(" Line")[0]);
-      })
-      .on("mouseleave", function(d) {
-        d3.select(this)
-          .style("opacity", 0.3);
-        svg_line.select("#IvyName").text("");
-      })
-}
+  for (var i= 0; i < school_list_line.length; i++) {
+    svg_line.append("path")
+      .datum(data_line)
+        .attr("id", school_list_line[i]+" Line")
+        .attr("class", "line")
+        .style("fill", "none")
+        .style("opacity", 0.3)
+        .style("stroke", school_colors[i])
+        .style("stroke-width", "4px")
+        .attr("d", make_line(school_list_line[i]))
+        .on("mouseover", function(d) {
+          d3.select(this)
+            .style("opacity", 0.9);
+          svg_line.select("#IvyName").text((this.id).split(" Line")[0]);
+        })
+        .on("mouseleave", function(d) {
+          d3.select(this)
+            .style("opacity", 0.3);
+          svg_line.select("#IvyName").text("");
+        })
+  }
 
-var div = d3.select("body").append("div")
-  .attr("class", "tooltip")       
-  .style("opacity", 0);
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip")       
+    .style("opacity", 0);
 
-var circles = svg_line.selectAll("circle")
+  var circles = svg_line.selectAll("circle")
 
-for (var i= 0; i < school_list_line.length; i++) {
-  circles.data(Object.values(diversityIdxSch)[i])
-    .enter().append("circle")
-      .attr("r",3)
-      .attr("id", school_list_line[i]+" Dot " + (1994+i))
-      .attr("cx",function(d,i){ return x(1994+i); })
-      .attr("cy",function(d,i){ return y(d); })
-      .attr("fill",school_colors[i])
-      .attr("z-index",-10)
-      .style("opacity",0.8)
-      .on("mouseover", function(d) {
-        d3.select(this)
-          .style("opacity", 1.0);
-        svg_line.select("#IvyName").text((this.id).split(" Dot")[0]);
-        svg_line.select("path[id='"+(this.id).split(" Dot")[0]+" Line']")
-          .style("opacity",0.9);
+  for (var i= 0; i < school_list_line.length; i++) {
+    circles.data(Object.values(diversityIdxSch)[i])
+      .enter().append("circle")
+        .attr("r",3)
+        .attr("id", school_list_line[i]+" Dot " + (1994+i))
+        .attr("cx",function(d,i){ return x(1994+i); })
+        .attr("cy",function(d,i){ return y(d); })
+        .attr("fill",school_colors[i])
+        .attr("z-index",-10)
+        .style("opacity",0.8)
+        .on("mouseover", function(d) {
+          d3.select(this)
+            .style("opacity", 1.0);
+          svg_line.select("#IvyName").text((this.id).split(" Dot")[0]);
+          svg_line.select("path[id='"+(this.id).split(" Dot")[0]+" Line']")
+            .style("opacity",0.9);
 
-        // https://en.wikipedia.org/wiki/Web_colors#X11_color_names <-- pick colors by name
-        div.transition().duration(200)
-          .style("opacity", 0.9);
+          // https://en.wikipedia.org/wiki/Web_colors#X11_color_names <-- pick colors by name
+          div.transition().duration(200)
+            .style("opacity", 0.9);
 
-        div.html(d.toFixed(2)+"%")
-          .style("width","60px")
-          .style("height","20px")
-          .style("left", d3.event.pageX-60-10+"px")
-          .style("top", d3.event.pageY-20-10+"px");
-      })
-      .on("mouseleave", function(d) {
-        d3.select(this)
-          .style("opacity", 0.8);
-        svg_line.select("#IvyName").text("");
-        svg_line.select("path[id='"+(this.id).split(" Dot")[0]+" Line']")
-          .style("opacity",0.3);
-        div.transition().duration(500)
-          .style("opacity", 0); 
-      })
-}
+          div.html(d.toFixed(2)+"%")
+            .style("width","60px")
+            .style("height","20px")
+            .style("left", d3.event.pageX-60-10+"px")
+            .style("top", d3.event.pageY-20-10+"px");
+        })
+        .on("mouseleave", function(d) {
+          d3.select(this)
+            .style("opacity", 0.8);
+          svg_line.select("#IvyName").text("");
+          svg_line.select("path[id='"+(this.id).split(" Dot")[0]+" Line']")
+            .style("opacity",0.3);
+          div.transition().duration(500)
+            .style("opacity", 0); 
+        })
+  }
 
-// text label for the y axis
-svg_line.append("text")
-  .attr("transform", "rotate(-90)")
-  .attr("y", 0 - margin.left/3*2)
-  .attr("x",0 - (height / 2))
-  .attr("dy", "1em")
-  .style("text-anchor", "middle")
-  .text("Diversity Index*");
+  // text label for the y axis
+  svg_line.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left/3*2)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Diversity Index*");
 
-   // text label for the x axis
-svg_line.append("text")
-  .attr("transform",
-        "translate(" + (width/2) + " ," +
-                       (height + margin.top + 20) + ")")
-  .text("Year");
+     // text label for the x axis
+  svg_line.append("text")
+    .attr("transform",
+          "translate(" + (width/2) + " ," +
+                         (height + margin.top + 20) + ")")
+    .text("Year");
 });
 
 svg_line.append("text")
