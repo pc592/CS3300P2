@@ -1,5 +1,6 @@
       /* https://bl.ocks.org/mbostock/3887193: donut chart reference */
-
+d3.select("#a_tab").attr("class", "tab-pane active");
+d3.select("#b_tab").attr("class", "tab-pane");
       var data;
       var year;
       // var race;
@@ -172,7 +173,7 @@
               .attr("d", arc)
               .on("mouseover", function(d) {
                 d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]
-                  + ", %" + donut_data[d.index]/partialStats);
+                  + ", " + (donut_data[d.index]/totalStats).toFixed(2) + "%");
                 d3.select(this.parentNode).select('text')
                   .style("font-size", "7vh")
                   .style("opacity", "1")

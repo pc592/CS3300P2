@@ -2,7 +2,8 @@
 for creating multi=line graph */
 
 /* http://bl.ocks.org/d3noob/a22c42db65eb00d4e369: tooltip reference */
-
+d3.select("#b_tab").attr("class", "tab-pane active");
+d3.select("#a_tab").attr("class", "tab-pane");
 var diversityIdxObj = {};
 var diversityIdxYrs = {};
 
@@ -69,7 +70,6 @@ function make_line(school) {
     .x(function(d) {return x(Number(d.Year)); })
     .y(function(d) {return y(Number(diversityIndex(Number(d.Year)-1994,school))); });
 }
-
 //Define the svg for the multi-line graph
 var svg_line = d3.select("bcontent").select("#line_svg")
     .attr("width", width + margin.left + margin.right)
