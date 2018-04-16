@@ -145,7 +145,7 @@
           // generate new random data
           //donut_data = makeData(+document.getElementById("datacount").value);
           var donut_data = makeDataSchool(school_list,yearInput,schoolInput,num, racedic);
-          
+
           // add transition to new path
           g.datum(donut_data).selectAll("path")
             .data(pie)
@@ -169,7 +169,8 @@
               .attr("fill", function(d,i){ return color(i); })
               .attr("d", arc)
               .on("mouseover", function(d) {
-                d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]);
+                d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + "-" + donut_data[d.index]
+                  + ", %" + donut_data[d.index]/partialStats);
                 d3.select(this.parentNode).select('text')
                   .style("font-size", "7vh")
                   .style("opacity", "1")

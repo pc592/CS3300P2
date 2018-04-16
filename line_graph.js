@@ -68,7 +68,7 @@ function make_line(school) {
 }
 
 //Define the svg for the multi-line graph
-var svg_line = d3.select("acontent").append("svg")
+var svg_line = d3.select("bcontent").select("#line_svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + 100 + margin.top + margin.bottom)
   .append("g")

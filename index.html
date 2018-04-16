@@ -25,7 +25,7 @@
                   <acontent></acontent>
               </div>
               <div class="tab-pane active" id="b_tab">
-                  <bcontent></bcontent>
+                  <bcontent><svg id= "line_svg"></svg></bcontent>
               </div>
           </div>
       </div>
@@ -76,6 +76,9 @@
     <script>
             $.getScript("donut.js");
             $(".atab").click(function() {
+                $("#line_svg").hide()
+                $("#donut1").empty()
+                $("#donut2").empty()
                 $(".divSplit1").show()
                 $(".divSplit2").show()
                 $("acontent").empty()
@@ -85,6 +88,7 @@
         </script>
         <script>
             $(".btab").click(function() {
+                $("#line_svg").empty()
                 $(".divSplit1").hide()
                 $(".divSplit2").hide()
                 $("#donut1").empty()
