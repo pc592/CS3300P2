@@ -1,3 +1,8 @@
+// Init tooltip and state name placeholder
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 /* https://bl.ocks.org/mbostock/3887193: donut chart reference */
 d3.select("#a_tab").attr("class", "tab-pane active");
 d3.select("#b_tab").attr("class", "tab-pane");
@@ -186,6 +191,12 @@ function createVisualization(num) {
         .attr("fill", function(d,i){ return color(i); })
         .attr("d", arc)
         .on("mouseover", function(d) {
+          div.transition().duration(200)
+            .style("opacity", 1);
+            div.html("Hovered Demographic: " + racedic.get(d.index) + " - " + donut_data[d.index]
+            + ", " + (100*(donut_data[d.index]/totalStats)).toFixed(2) + "%")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY-28) + "px");
           d3.select("#current_demograhic" + num).text("Hovered Demographic: " + racedic.get(d.index) + " - " + donut_data[d.index]
             + ", " + (100*(donut_data[d.index]/totalStats)).toFixed(2) + "%");
           d3.select(this.parentNode).select('text')
@@ -198,6 +209,8 @@ function createVisualization(num) {
         .on("mouseout", function(d) {
           d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
           if(indexesSelected.indexOf(d.index) == -1){
+            div.transition().duration(500)
+            .style("opacity", 0);
             d3.select(this.parentNode).select('text')
               .style("font-size", "5vh")
               .style("opacity", "0.6")
@@ -230,6 +243,12 @@ function createVisualization(num) {
           }
         })
         .on("mouseenter", function(d,i) {
+          div.transition().duration(200)
+            .style("opacity", 1);
+            div.html("Hovered Demographic: " + racedic.get(d.index) + " - " + donut_data[d.index]
+            + ", " + (100*(donut_data[d.index]/totalStats)).toFixed(2) + "%")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY-28) + "px");
           d3.select(this)
               .style("font-size", "7vh")
               .style("opacity", "1")
@@ -240,6 +259,8 @@ function createVisualization(num) {
             + ", " + (100*(donut_data[d.index]/totalStats)).toFixed(2) + "%");
         })
         .on("mouseout", function(d) {
+          div.transition().duration(500)
+            .style("opacity", 0);
           d3.select("#current_demograhic" + num).text("Hovered Demographic: ");
           if(indexesSelected.indexOf(d.index) == -1){
             d3.select(this)
